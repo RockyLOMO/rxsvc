@@ -1,0 +1,10 @@
+# ignore output folders
+.idea/
+out/
+target/
+
+# ignore files
+*.iml
+config.json
+bootstrapPath_IS_UNDEFINED
+.DS_Store
