@@ -49,8 +49,9 @@
         <shallow>true</shallow>
         <gpg.skip>true</gpg.skip>
         <lombok.version>1.18.16</lombok.version>
-        <rxlib.version>2.16.9</rxlib.version>
+        <rxlib.version>2.16.10-SNAPSHOT</rxlib.version>
         <poi.version>4.1.2</poi.version>
+        <redisson.version>3.13.4</redisson.version>
         <rdbc.HikariCP>3.4.5</rdbc.HikariCP>
         <rdbc.druid>1.2.1</rdbc.druid>
     </properties>
@@ -70,6 +71,11 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
