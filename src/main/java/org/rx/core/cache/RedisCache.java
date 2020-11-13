@@ -9,6 +9,7 @@ import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.RedisClient;
 import org.redisson.client.RedisClientConfig;
+import org.redisson.codec.SerializationCodec;
 import org.redisson.config.Config;
 import org.rx.bean.BiTuple;
 import org.rx.bean.DateTime;
@@ -45,12 +46,19 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     }
 
     public static RedissonClient create(String redisUrl) {
+        return create(redisUrl, false);
+    }
+
+    public static RedissonClient create(String redisUrl, boolean jdkCodec) {
         require(redisUrl);
 
         BiTuple<String, Integer, String> resolve = resolve(redisUrl);
         log.info("RedissonClient {} -> {}", redisUrl, resolve);
         Config config = new Config();
         config.setExecutor(Tasks.getExecutor());
+        if (jdkCodec) {
+            config.setCodec(new SerializationCodec());
+        }
         config.useSingleServer().setKeepAlive(true).setTcpNoDelay(true)
                 .setConnectionMinimumIdleSize(CONFIG.getNetMinPoolSize()).setConnectionPoolSize(CONFIG.getNetMaxPoolSize())
                 .setSubscriptionConnectionMinimumIdleSize(1).setSubscriptionConnectionPoolSize(ThreadPool.CPU_THREADS)
