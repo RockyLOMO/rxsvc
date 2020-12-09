@@ -2,7 +2,7 @@ pipeline {
     agent {
         kubernetes {
         //cloud 'kubernetes'
-        label 'maven'
+        label 'maven2'
         yaml """
 apiVersion: v1
 kind: Pod
@@ -26,7 +26,7 @@ spec:
     stages {
         stage ('build') {
             steps {
-                container ('maven') {
+                container ('maven2') {
                     sh 'mvn -B -Dmaven.test.skip=true -Dgpg.skip=true clean install'
                 }
             }
