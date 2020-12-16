@@ -13,7 +13,9 @@ import org.redisson.codec.SerializationCodec;
 import org.redisson.config.Config;
 import org.rx.bean.BiTuple;
 import org.rx.bean.DateTime;
+import org.rx.bean.RxConfig;
 import org.rx.bean.Tuple;
+import org.rx.core.App;
 import org.rx.core.Cache;
 import org.rx.core.Tasks;
 import org.rx.core.ThreadPool;
@@ -25,7 +27,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import static org.rx.core.Contract.CONFIG;
 import static org.rx.core.Contract.require;
 
 @Slf4j
@@ -59,8 +60,9 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         if (jdkCodec) {
             config.setCodec(new SerializationCodec());
         }
+        RxConfig rxConfig = App.getConfig();
         config.useSingleServer().setKeepAlive(true).setTcpNoDelay(true)
-                .setConnectionMinimumIdleSize(CONFIG.getNetMinPoolSize()).setConnectionPoolSize(CONFIG.getNetMaxPoolSize())
+                .setConnectionMinimumIdleSize(rxConfig.getNetMinPoolSize()).setConnectionPoolSize(rxConfig.getNetMaxPoolSize())
                 .setSubscriptionConnectionMinimumIdleSize(1).setSubscriptionConnectionPoolSize(ThreadPool.CPU_THREADS)
                 .setAddress(String.format("redis://%s", resolve.left)).setDatabase(resolve.middle).setPassword(resolve.right);
         return Redisson.create(config);
