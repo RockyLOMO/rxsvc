@@ -61,9 +61,11 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
             config.setCodec(new SerializationCodec());
         }
         RxConfig rxConfig = App.getConfig();
+        int minPoolSize = Math.max(2, rxConfig.getNetMinPoolSize());
+        int maxPoolSize = Math.max(minPoolSize, rxConfig.getNetMaxPoolSize());
         config.useSingleServer().setKeepAlive(true).setTcpNoDelay(true)
-                .setConnectionMinimumIdleSize(rxConfig.getNetMinPoolSize()).setConnectionPoolSize(rxConfig.getNetMaxPoolSize())
-                .setSubscriptionConnectionMinimumIdleSize(1).setSubscriptionConnectionPoolSize(ThreadPool.CPU_THREADS)
+                .setConnectionMinimumIdleSize(minPoolSize).setConnectionPoolSize(maxPoolSize)
+                .setSubscriptionConnectionMinimumIdleSize(minPoolSize).setSubscriptionConnectionPoolSize(maxPoolSize)
                 .setAddress(String.format("redis://%s", resolve.left)).setDatabase(resolve.middle).setPassword(resolve.right);
         return Redisson.create(config);
     }

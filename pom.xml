@@ -51,7 +51,7 @@
         <lombok.version>1.18.16</lombok.version>
         <rxlib.version>2.17.0-SNAPSHOT</rxlib.version>
         <poi.version>4.1.2</poi.version>
-        <redisson.version>3.13.6</redisson.version>
+        <redisson.version>3.14.0</redisson.version>
         <rdbc.HikariCP>3.4.5</rdbc.HikariCP>
         <rdbc.druid>1.2.1</rdbc.druid>
     </properties>
