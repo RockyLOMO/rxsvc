@@ -25,6 +25,11 @@ public class UtilTester {
         System.out.println(poll);
     }
 
+    @Test
+    public void email() {
+        Helper.sendEmail("hw", "asd", "rockywong.chn@qq.com");
+    }
+
     @SneakyThrows
     @Test
     public void excel() {

@@ -54,6 +54,7 @@
         <redisson.version>3.14.0</redisson.version>
         <rdbc.HikariCP>3.4.5</rdbc.HikariCP>
         <rdbc.druid>1.2.1</rdbc.druid>
+        <javaxMail.version>1.6.2</javaxMail.version>
     </properties>
 
     <dependencies>
@@ -86,6 +87,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>${rdbc.druid}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${javaxMail.version}</version>
         </dependency>
 
         <dependency>

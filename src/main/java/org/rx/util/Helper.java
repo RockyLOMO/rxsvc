@@ -9,17 +9,50 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 
-import static org.rx.core.Contract.toJsonString;
-import static org.rx.core.Contract.tryClose;
+import static org.rx.core.Contract.*;
 
 @Slf4j
 public class Helper {
+    @SneakyThrows
+    public static void sendEmail(final String password, String body, String toEmail) {
+        require(password, toEmail);
+
+        final String fromEmail = "17091916400@163.com";
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.163.com");
+        props.put("mail.smtp.port", "25");
+        props.put("mail.smtp.auth", "true");
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromEmail, password);
+            }
+        });
+
+        MimeMessage msg = new MimeMessage(session);
+        msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
+        msg.addHeader("format", "flowed");
+        msg.addHeader("Content-Transfer-Encoding", "8bit");
+
+        msg.setFrom(new InternetAddress(fromEmail, "System"));
+        msg.setReplyTo(InternetAddress.parse("no_reply@f-li.cn", false));
+
+        msg.setSubject("Notification", "UTF-8");
+        msg.setText(body, "UTF-8");
+        msg.setSentDate(new Date());
+
+        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
+        Transport.send(msg);
+    }
+
     @SneakyThrows
     public static Map<String, List<Object[]>> readExcel(InputStream in, boolean skipColumn) {
         return readExcel(in, skipColumn, false);
