@@ -1,7 +1,8 @@
-package org.rx.core.cache;
+package org.rx.redis;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.netty.util.concurrent.FastThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 import org.rx.bean.Tuple;
 import org.rx.core.Reflects;
@@ -13,7 +14,7 @@ import static org.rx.core.Contract.*;
 @Slf4j
 public class PikaDb<TK, TV> extends RedisCache<TK, TV> {
     private static final String typeKey = "_type_", jsonKey = "_json_";
-    private static final ThreadLocal<Type> tsTypeToken = new ThreadLocal<>();
+    private static final FastThreadLocal<Type> tsTypeToken = new FastThreadLocal<>();
 
     public PikaDb(String url) {
         super(url, Tuple.of(v -> {

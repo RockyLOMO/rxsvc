@@ -1,35 +1,31 @@
-package org.rx.util;
+package org.rx.redis;
 
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
 import org.rx.core.NQuery;
 import org.rx.core.Strings;
 import org.rx.core.ThreadPool;
-import org.rx.core.cache.HybridCache;
+import org.rx.config.RedisConfig;
+import org.rx.util.Servlets;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
+@RequiredArgsConstructor
+@Component
 @Slf4j
 public class RateLimiter {
     interface RateLimiterAdapter {
         boolean tryAcquire();
     }
 
-    @Getter
-    private static final RateLimiter instance = new RateLimiter();
-    private static final List<String> whiteList = new CopyOnWriteArrayList<>();
-
-    static {
-        whiteList.add("127.0.0.");
-        whiteList.add("172.");
-    }
-
+    private final RedisConfig redisConfig;
+    private final RedisCache<?, ?> redisCache;
     private final Map<String, RateLimiterAdapter> rateLimiters = new ConcurrentHashMap<>();
 
     private int permitsPerSecond() {
@@ -41,7 +37,8 @@ public class RateLimiter {
     }
 
     public boolean tryAcquire(String clientIp) {
-        if (NQuery.of(whiteList).any(p -> Strings.startsWith(clientIp, p))) {
+        if (!CollectionUtils.isEmpty(redisConfig.getLimiterWhiteList())
+                && NQuery.of(redisConfig.getLimiterWhiteList()).any(p -> Strings.startsWith(clientIp, p))) {
             return true;
         }
 
@@ -56,7 +53,7 @@ public class RateLimiter {
         String k = "RateLimiter:" + clientIp;
         return rateLimiters.computeIfAbsent(k, x -> {
             try {
-                RRateLimiter limiter = HybridCache.getInstance().getClient().getRateLimiter(x);
+                RRateLimiter limiter = redisCache.getClient().getRateLimiter(x);
                 if (!limiter.trySetRate(RateType.OVERALL, permitsPerSecond(), 1, RateIntervalUnit.SECONDS)) {
                     log.error("trySetRate fail, key={}", k);
                 }

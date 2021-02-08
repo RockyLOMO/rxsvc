@@ -1,4 +1,4 @@
-package org.rx.core.cache;
+package org.rx.redis;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,6 @@ import org.rx.bean.Tuple;
 import org.rx.core.App;
 import org.rx.core.Cache;
 import org.rx.core.Tasks;
-import org.rx.core.ThreadPool;
 import org.rx.util.function.BiFunc;
 
 import java.io.Serializable;
@@ -32,6 +31,7 @@ import static org.rx.core.Contract.require;
 @Slf4j
 public class RedisCache<TK, TV> implements Cache<TK, TV> {
     public static final int ONE_DAY_EXPIRE = 60 * 24;
+    public static final int PERSISTENT_EXPIRE = -1;
 
     public static int todayEffective() {
         return todayEffective(HybridCache.ONE_DAY_EXPIRE);

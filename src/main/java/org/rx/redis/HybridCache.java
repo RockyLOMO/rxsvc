@@ -1,4 +1,4 @@
-package org.rx.core.cache;
+package org.rx.redis;
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
@@ -13,26 +13,8 @@ import org.rx.util.function.BiFunc;
 import java.util.Map;
 import java.util.Set;
 
-import static org.rx.core.Contract.readSetting;
-
 @Slf4j
 public final class HybridCache<TK, TV> extends RedisLocalCache<TK, TV> {
-    public static final int PERSISTENT_EXPIRE = -1;
-    private static HybridCache instance;
-
-    public static synchronized <TK, TV> HybridCache<TK, TV> getInstance() {
-        if (instance == null) {
-            String redisUrl = readSetting("app.redisUrl"), storeUrl = readSetting("app.storeUrl");
-            if (Strings.isNullOrEmpty(redisUrl)) {
-                throw new InvalidException("app.redisUrl is null");
-            }
-
-            Container.getInstance().register(Cache.LRU_CACHE, instance = new HybridCache<>(redisUrl, Cache.getInstance(Cache.LRU_CACHE), storeUrl));
-            log.info("register hybrid cache ok");
-        }
-        return instance;
-    }
-
     private volatile int usedMemoryPercent;
     @Setter
     private int useStoreThreshold = 65;
@@ -51,7 +33,7 @@ public final class HybridCache<TK, TV> extends RedisLocalCache<TK, TV> {
         return super.size() + storeFilter.approximateElementCount();
     }
 
-    private HybridCache(String redisUrl, Cache<TK, TV> local, String storeUrl) {
+    public HybridCache(String redisUrl, Cache<TK, TV> local, String storeUrl) {
         super(redisUrl, local);
 //        setExpireMinutes(CONFIG.getCacheExpireMinutes());
         setSlidingExpiration(true);

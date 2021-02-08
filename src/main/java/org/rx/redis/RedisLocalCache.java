@@ -1,4 +1,4 @@
-package org.rx.core.cache;
+package org.rx.redis;
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.rx.core.Cache;
+import org.rx.core.Contract;
 import org.rx.util.function.BiFunc;
 
 import java.io.Serializable;
@@ -64,7 +65,7 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
         if (v != null) {
             return v;
         }
-        return quietly(() -> super.remove(k));
+        return Contract.quietly(() -> super.remove(k));
     }
 
     @Override

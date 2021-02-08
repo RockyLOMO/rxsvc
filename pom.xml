@@ -10,12 +10,12 @@
     </parent>
 
     <groupId>com.github.rockylomo</groupId>
-    <artifactId>rxlib.proxy</artifactId>
+    <artifactId>rxlib.data</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <!-- -SNAPSHOT -->
-    <name>rxlib.proxy</name>
+    <name>rxlib.data</name>
     <description>A set of utilities for Java</description>
-    <url>https://github.com/RockyLOMO/rxlib.proxy</url>
+    <url>https://github.com/RockyLOMO/rxlib.data</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -24,9 +24,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/RockyLOMO/rxlib.proxy</url>
-        <connection>scm:git:https://github.com/RockyLOMO/rxlib.proxy.git</connection>
-        <developerConnection>scm:git:https://github.com/RockyLOMO/rxlib.proxy.git</developerConnection>
+        <url>https://github.com/RockyLOMO/rxlib.data</url>
+        <connection>scm:git:https://github.com/RockyLOMO/rxlib.data.git</connection>
+        <developerConnection>scm:git:https://github.com/RockyLOMO/rxlib.data.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <organization>
@@ -49,12 +49,13 @@
         <shallow>true</shallow>
         <gpg.skip>true</gpg.skip>
         <lombok.version>1.18.16</lombok.version>
-        <rxlib.version>2.17.0-SNAPSHOT</rxlib.version>
-        <poi.version>4.1.2</poi.version>
+        <rxlib.version>2.17.1-SNAPSHOT</rxlib.version>
         <redisson.version>3.15.0</redisson.version>
-        <rdbc.HikariCP>3.4.5</rdbc.HikariCP>
-        <rdbc.druid>1.2.1</rdbc.druid>
+        <HikariCP.version>4.0.1</HikariCP.version>
+        <druid.version>1.2.1</druid.version>
+
         <javaxMail.version>1.6.2</javaxMail.version>
+        <poi.version>4.1.2</poi.version>
     </properties>
 
     <dependencies>
@@ -81,12 +82,12 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>${rdbc.HikariCP}</version>
+            <version>${HikariCP.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
-            <version>${rdbc.druid}</version>
+            <version>${druid.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>

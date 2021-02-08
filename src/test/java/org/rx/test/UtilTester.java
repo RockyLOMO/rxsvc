@@ -2,10 +2,9 @@ package org.rx.test;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.redisson.api.RQueue;
 import org.redisson.api.RTransferQueue;
 import org.redisson.codec.SerializationCodec;
-import org.rx.core.cache.HybridCache;
+import org.rx.redis.HybridCache;
 import org.rx.io.IOStream;
 import org.rx.util.Helper;
 
@@ -17,7 +16,7 @@ public class UtilTester {
     @SneakyThrows
     @Test
     public void redis() {
-        RTransferQueue<IOStream> queue = HybridCache.getInstance().getClient().getTransferQueue("x", new SerializationCodec());
+        RTransferQueue<IOStream> queue = HybridCache.create("").getTransferQueue("x", new SerializationCodec());
         String p = "E:\\Photo\\养生\\f0.jpg", p2 = "E:\\Photo\\养生\\喝水.png";
         queue.add(IOStream.wrap(p));
         System.out.println(queue.getCodec());
