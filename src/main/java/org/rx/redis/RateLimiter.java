@@ -11,6 +11,7 @@ import org.rx.core.Strings;
 import org.rx.core.ThreadPool;
 import org.rx.config.RedisConfig;
 import org.rx.util.Servlets;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @Component
+@ConditionalOnProperty(name = "app.redisUrl")
 @Slf4j
 public class RateLimiter {
     interface RateLimiterAdapter {
