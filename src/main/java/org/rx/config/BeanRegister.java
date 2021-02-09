@@ -16,8 +16,10 @@ import static org.rx.core.Cache.LRU_CACHE;
 @Configuration
 @Slf4j
 public class BeanRegister {
+    public static final String REDIS_PROP_NAME = "app.redisUrl";
+
     @Bean
-    @ConditionalOnProperty(name = "app.redisUrl")
+    @ConditionalOnProperty(name = REDIS_PROP_NAME)
     public <TK, TV> RedisCache<TK, TV> redisCache(RedisConfig redisConfig) {
         if (Strings.isNullOrEmpty(redisConfig.getRedisUrl())) {
             throw new InvalidException("app.redisUrl is null");

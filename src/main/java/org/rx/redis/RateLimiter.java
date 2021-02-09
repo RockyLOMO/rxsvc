@@ -6,6 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
+import org.rx.config.BeanRegister;
 import org.rx.core.NQuery;
 import org.rx.core.Strings;
 import org.rx.core.ThreadPool;
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @Component
-@ConditionalOnProperty(name = "app.redisUrl")
+@ConditionalOnProperty(name = BeanRegister.REDIS_PROP_NAME)
 @Slf4j
 public class RateLimiter {
     interface RateLimiterAdapter {
