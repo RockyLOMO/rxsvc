@@ -12,7 +12,7 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
 
-import static org.rx.core.Contract.require;
+import static org.rx.core.App.require;
 
 @RequiredArgsConstructor
 public abstract class SuperResultSet extends SuperJdbc implements ResultSet {

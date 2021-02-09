@@ -6,13 +6,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.rx.core.Cache;
-import org.rx.core.Contract;
+import org.rx.core.App;
 import org.rx.util.function.BiFunc;
 
 import java.io.Serializable;
 import java.util.Set;
 
-import static org.rx.core.Contract.*;
+import static org.rx.core.App.*;
 
 @Slf4j
 public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
@@ -65,7 +65,7 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
         if (v != null) {
             return v;
         }
-        return Contract.quietly(() -> super.remove(k));
+        return quietly(() -> super.remove(k));
     }
 
     @Override

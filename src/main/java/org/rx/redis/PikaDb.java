@@ -9,7 +9,7 @@ import org.rx.core.Reflects;
 
 import java.lang.reflect.Type;
 
-import static org.rx.core.Contract.*;
+import static org.rx.core.App.*;
 
 @Slf4j
 public class PikaDb<TK, TV> extends RedisCache<TK, TV> {

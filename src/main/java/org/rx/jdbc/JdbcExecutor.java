@@ -20,7 +20,7 @@ import java.net.InetSocketAddress;
 import java.sql.*;
 import java.util.List;
 
-import static org.rx.core.Contract.*;
+import static org.rx.core.App.*;
 
 @Slf4j
 public class JdbcExecutor extends Disposable {

@@ -8,7 +8,7 @@ import org.rx.core.Reflects;
 
 import java.sql.*;
 
-import static org.rx.core.Contract.proxy;
+import static org.rx.core.App.proxy;
 
 public abstract class SuperStatement extends SuperJdbc implements Statement {
     @Getter

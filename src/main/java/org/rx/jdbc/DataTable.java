@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.rx.core.Contract.eq;
+import static org.rx.core.App.eq;
 
 public class DataTable implements Serializable {
     public static DataTable create(String tableName) {

@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.rx.core.Contract.require;
+import static org.rx.core.App.require;
 
 @RequiredArgsConstructor
 public class DataRow implements Serializable {

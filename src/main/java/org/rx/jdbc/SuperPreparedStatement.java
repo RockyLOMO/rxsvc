@@ -10,7 +10,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
-import static org.rx.core.Contract.proxy;
+import static org.rx.core.App.proxy;
 
 public abstract class SuperPreparedStatement extends SuperStatement implements PreparedStatement {
     @Override

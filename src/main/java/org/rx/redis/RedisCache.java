@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import static org.rx.core.Contract.require;
+import static org.rx.core.App.require;
 
 @Slf4j
 public class RedisCache<TK, TV> implements Cache<TK, TV> {

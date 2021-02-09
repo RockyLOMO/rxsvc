@@ -14,7 +14,7 @@ import static org.rx.core.Cache.LRU_CACHE;
 
 @Configuration
 @Slf4j
-public class BeanConfig {
+public class BeanRegister {
     @Bean
     public <TK, TV> RedisCache<TK, TV> redisCache(RedisConfig redisConfig) {
         if (Strings.isNullOrEmpty(redisConfig.getRedisUrl())) {
