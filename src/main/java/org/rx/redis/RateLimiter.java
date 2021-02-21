@@ -32,7 +32,7 @@ public class RateLimiter {
     private final Map<String, RateLimiterAdapter> rateLimiters = new ConcurrentHashMap<>();
 
     private int permitsPerSecond() {
-        return Math.max(4, ThreadPool.CPU_THREADS);
+        return Math.max(6, ThreadPool.CPU_THREADS);
     }
 
     public boolean tryAcquire() {
