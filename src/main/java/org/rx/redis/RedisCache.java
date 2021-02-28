@@ -47,7 +47,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     }
 
     public static RedissonClient create(String redisUrl) {
-        return create(redisUrl, true);
+        return create(redisUrl, false);
     }
 
     public static RedissonClient create(String redisUrl, boolean jdkCodec) {
