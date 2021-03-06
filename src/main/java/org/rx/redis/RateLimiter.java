@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
+import org.redisson.api.RateLimiterConfig;
 import org.redisson.api.RateType;
 import org.rx.config.BeanRegister;
 import org.rx.core.NQuery;
@@ -66,6 +67,12 @@ public class RateLimiter {
 
     public RRateLimiter createLimiter(String key, long rate, long rateInterval) {
         RRateLimiter limiter = redisCache.getClient().getRateLimiter(key);
+        RateLimiterConfig config = limiter.getConfig();
+        if (config != null && config.getRate() == rate && config.getRateInterval() == RateIntervalUnit.SECONDS.toMillis(rateInterval)) {
+            return limiter;
+        }
+
+        log.info("trySetRate start, {} {}", key, rate);
         int retry = 4;
         // 循环直到重新配置成功
         while (--retry > 0 && !limiter.trySetRate(RateType.OVERALL, rate, rateInterval, RateIntervalUnit.SECONDS)) {
@@ -73,7 +80,7 @@ public class RateLimiter {
             limiter = redisCache.getClient().getRateLimiter(key);
         }
         if (retry == 0) {
-            log.error("trySetRate fail, key={}", key);
+            log.warn("trySetRate fail, {} {}", key, rate);
         }
         return limiter;
     }
