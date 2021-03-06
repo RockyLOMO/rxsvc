@@ -32,7 +32,7 @@ public class RateLimiter {
     private final Map<String, RateLimiterAdapter> rateLimiters = new ConcurrentHashMap<>();
 
     private int permitsPerSecond() {
-        return Math.max(6, ThreadPool.CPU_THREADS);
+        return Math.max(8, ThreadPool.CPU_THREADS);
     }
 
     public boolean tryAcquire() {
@@ -56,16 +56,25 @@ public class RateLimiter {
         String k = "RateLimiter:" + clientIp;
         return rateLimiters.computeIfAbsent(k, x -> {
             try {
-                RRateLimiter limiter = redisCache.getClient().getRateLimiter(x);
-                if (!limiter.trySetRate(RateType.OVERALL, permitsPerSecond(), 1, RateIntervalUnit.SECONDS)) {
-                    log.error("trySetRate fail, key={}", k);
-                }
-                return limiter::tryAcquire;
+                return createLimiter(x, permitsPerSecond(), 1)::tryAcquire;
             } catch (Exception e) {
                 log.error("getLimiter", e);
-                com.google.common.util.concurrent.RateLimiter local = com.google.common.util.concurrent.RateLimiter.create(permitsPerSecond());
-                return local::tryAcquire;
+                return com.google.common.util.concurrent.RateLimiter.create(permitsPerSecond())::tryAcquire;
             }
         });
+    }
+
+    public RRateLimiter createLimiter(String key, long rate, long rateInterval) {
+        RRateLimiter limiter = redisCache.getClient().getRateLimiter(key);
+        int retry = 4;
+        // 循环直到重新配置成功
+        while (--retry > 0 && !limiter.trySetRate(RateType.OVERALL, rate, rateInterval, RateIntervalUnit.SECONDS)) {
+            limiter.delete();
+            limiter = redisCache.getClient().getRateLimiter(key);
+        }
+        if (retry == 0) {
+            log.error("trySetRate fail, key={}", key);
+        }
+        return limiter;
     }
 }
