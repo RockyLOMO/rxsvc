@@ -67,9 +67,11 @@ public class RateLimiter {
 
     public RRateLimiter createLimiter(String key, long rate, long rateInterval) {
         RRateLimiter limiter = redisCache.getClient().getRateLimiter(key);
-        RateLimiterConfig config = limiter.getConfig();
-        if (config != null && config.getRate() == rate && config.getRateInterval() == RateIntervalUnit.SECONDS.toMillis(rateInterval)) {
-            return limiter;
+        if (limiter.isExists()) {
+            RateLimiterConfig config = limiter.getConfig();
+            if (config.getRate() == rate && config.getRateInterval() == RateIntervalUnit.SECONDS.toMillis(rateInterval)) {
+                return limiter;
+            }
         }
 
         log.info("trySetRate start, {} {}", key, rate);
