@@ -2,12 +2,12 @@ package org.rx.redis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateLimiterConfig;
 import org.redisson.api.RateType;
 import org.rx.config.BeanRegister;
+import org.rx.core.Arrays;
 import org.rx.core.NQuery;
 import org.rx.core.Strings;
 import org.rx.core.ThreadPool;
@@ -33,7 +33,7 @@ public class RateLimiter {
     private final Map<String, RateLimiterAdapter> rateLimiters = new ConcurrentHashMap<>();
 
     private int permitsPerSecond() {
-        return Math.max(8, ThreadPool.CPU_THREADS);
+        return Math.max(redisConfig.getLimiterPermits(), ThreadPool.CPU_THREADS);
     }
 
     public boolean tryAcquire() {
@@ -41,7 +41,7 @@ public class RateLimiter {
     }
 
     public boolean tryAcquire(String clientIp) {
-        if (!CollectionUtils.isEmpty(redisConfig.getLimiterWhiteList())
+        if (!Arrays.isEmpty(redisConfig.getLimiterWhiteList())
                 && NQuery.of(redisConfig.getLimiterWhiteList()).any(p -> Strings.startsWith(clientIp, p))) {
             return true;
         }
