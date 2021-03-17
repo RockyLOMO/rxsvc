@@ -50,7 +50,12 @@ public class Helper {
         msg.setSentDate(new Date());
 
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
-        Transport.send(msg);
+
+        try {
+            Transport.send(msg);
+        } catch (Exception e) {
+            log.warn("sendEmail {}", e.getMessage());
+        }
     }
 
     @SneakyThrows
