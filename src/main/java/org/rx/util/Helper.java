@@ -1,5 +1,6 @@
 package org.rx.util;
 
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -23,9 +24,7 @@ import static org.rx.core.App.*;
 @Slf4j
 public class Helper {
     @SneakyThrows
-    public static void sendEmail(final String password, String body, String toEmail) {
-        require(password, toEmail);
-
+    public static void sendEmail(@NonNull String password, String body,@NonNull String toEmail) {
         final String fromEmail = "17091916400@163.com";
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.163.com");

@@ -2,6 +2,7 @@ package org.rx.jdbc;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import org.rx.core.NQuery;
 import org.rx.core.exception.InvalidException;
 
@@ -11,7 +12,6 @@ import java.sql.Statement;
 import java.util.Iterator;
 
 import static org.rx.core.App.eq;
-import static org.rx.core.App.require;
 
 public class MixResultSet extends SuperResultSet {
     private String schemaName;
@@ -21,9 +21,8 @@ public class MixResultSet extends SuperResultSet {
     private int rowNo;
     private DataRow row;
 
-    public MixResultSet(Statement statement, String schemaName, DataTable dataTable) {
+    public MixResultSet(Statement statement, String schemaName,@NonNull DataTable dataTable) {
         super(statement);
-        require(dataTable);
 
         this.schemaName = schemaName;
         this.dataTable = dataTable;

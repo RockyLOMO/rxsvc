@@ -1,6 +1,7 @@
 package org.rx.jdbc;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.rx.core.Reflects;
 import org.rx.core.exception.InvalidException;
@@ -27,8 +28,7 @@ public class DataRow implements Serializable {
         return items.toArray();
     }
 
-    public void setArray(Object[] array) {
-        require(array);
+    public void setArray(@NonNull Object[] array) {
         require(array, array.length == table.getColumns().size());
 
         items.clear();
@@ -53,15 +53,13 @@ public class DataRow implements Serializable {
         set(table.getColumn(columnName), item);
     }
 
-    public <T> T get(DataColumn<T> column) {
-        require(column);
+    public <T> T get(@NonNull DataColumn<T> column) {
         require(column, column.getTable() == table);
 
         return (T) items.get(column.ordinal);
     }
 
-    public <T> void set(DataColumn<T> column, T item) {
-        require(column);
+    public <T> void set(@NonNull DataColumn<T> column, T item) {
         require(column, column.getTable() == table);
 
         if (column.dataType != null && !Reflects.isInstance(item, column.dataType)) {

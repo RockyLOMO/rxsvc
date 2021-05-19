@@ -1,6 +1,7 @@
 package org.rx.redis;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,10 @@ import org.rx.util.function.BiFunc;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-
-import static org.rx.core.App.require;
 
 @Slf4j
 public class RedisCache<TK, TV> implements Cache<TK, TV> {
@@ -50,9 +50,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         return create(redisUrl, false);
     }
 
-    public static RedissonClient create(String redisUrl, boolean jdkCodec) {
-        require(redisUrl);
-
+    public static RedissonClient create(@NonNull String redisUrl, boolean jdkCodec) {
         BiTuple<String, Integer, String> resolve = resolve(redisUrl);
         log.info("RedissonClient {} -> {}", redisUrl, resolve);
         Config config = new Config();
@@ -113,7 +111,8 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
 
     public RedisCache(String redisUrl, Tuple<BiFunc<TV, Serializable>, BiFunc<Serializable, TV>> onNotSerializable) {
         if (onNotSerializable != null) {
-            require(onNotSerializable.left, onNotSerializable.right);
+            Objects.requireNonNull(onNotSerializable.left);
+            Objects.requireNonNull(onNotSerializable.right);
         }
 
         client = create(redisUrl);
@@ -129,8 +128,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         return keys;
     }
 
-    protected String transferKey(TK k) {
-        require(k);
+    protected String transferKey(@NonNull TK k) {
         if (k instanceof String) {
             return k.toString();
         }
@@ -139,8 +137,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         return ck;
     }
 
-    protected TK transferKey(String k) {
-        require(k);
+    protected TK transferKey(@NonNull String k) {
         return keyMap.getOrDefault(k, (TK) k);
     }
 
@@ -151,8 +148,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
 
     @SneakyThrows
     @Override
-    public TV put(TK k, TV v, int expireMinutes) {
-        require(v);
+    public TV put(TK k, @NonNull TV v, int expireMinutes) {
         if (!(v instanceof Serializable) && onNotSerializable != null) {
             Serializable item = onNotSerializable.left.invoke(v);
             RBucket<Serializable> bucket = client.getBucket(transferKey(k));
@@ -193,9 +189,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
 
     @SneakyThrows
     @Override
-    public TV get(TK k, BiFunc<TK, TV> biFunc, int expireMinutes) {
-        require(biFunc);
-
+    public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, int expireMinutes) {
         RBucket bucket = client.getBucket(transferKey(k));
         TV v = check(bucket.get());
         if (v != null) {

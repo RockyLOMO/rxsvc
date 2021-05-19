@@ -1,5 +1,6 @@
 package org.rx.util;
 
+import lombok.NonNull;
 import org.rx.core.Strings;
 
 import java.util.ArrayList;
@@ -16,9 +17,7 @@ public class UrlGenerator implements Iterable<String> {
         return urls.iterator();
     }
 
-    public UrlGenerator(String urlExpression) {
-        require(urlExpression);
-
+    public UrlGenerator(@NonNull String urlExpression) {
         int s = urlExpression.indexOf("["), e;
         if (s == -1 || (e = urlExpression.indexOf("]", s)) == -1) {
             urls.add(urlExpression);

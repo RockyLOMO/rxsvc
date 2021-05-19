@@ -2,11 +2,11 @@ package org.rx.redis;
 
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.rx.core.Cache;
-import org.rx.core.App;
 import org.rx.util.function.BiFunc;
 
 import java.io.Serializable;
@@ -37,9 +37,7 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
     }
 
     @Override
-    public TV put(TK k, TV v, int expireMinutes) {
-        require(v);
-
+    public TV put(TK k, @NonNull TV v, int expireMinutes) {
         Class type = v.getClass();
         try {
             if (v instanceof Serializable && !notSerializable.mightContain(type.getName())) {

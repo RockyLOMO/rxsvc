@@ -1,6 +1,7 @@
 package org.rx.jdbc;
 
 import com.alibaba.fastjson.JSON;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -11,8 +12,7 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 import java.util.Map;
-
-import static org.rx.core.App.require;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public abstract class SuperResultSet extends SuperJdbc implements ResultSet {
@@ -22,9 +22,7 @@ public abstract class SuperResultSet extends SuperJdbc implements ResultSet {
         return create(dataTable, null);
     }
 
-    public static SuperResultSet create(DataTable dataTable, String schemaName) {
-        require(dataTable);
-
+    public static SuperResultSet create(@NonNull DataTable dataTable, String schemaName) {
         return new MixResultSet(null, schemaName, dataTable);
     }
 
@@ -33,7 +31,7 @@ public abstract class SuperResultSet extends SuperJdbc implements ResultSet {
 
     @Override
     public Statement getStatement() {
-        require(statement);
+        Objects.requireNonNull(statement);
         return statement;
     }
 

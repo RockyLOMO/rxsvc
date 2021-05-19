@@ -3,6 +3,7 @@ package org.rx.redis;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.util.concurrent.FastThreadLocal;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.rx.bean.Tuple;
 import org.rx.core.Reflects;
@@ -35,9 +36,7 @@ public class PikaDb<TK, TV> extends RedisCache<TK, TV> {
         }));
     }
 
-    public TV get(TK k, Type typeToken) {
-        require(typeToken);
-
+    public TV get(TK k,@NonNull Type typeToken) {
         tsTypeToken.set(typeToken);
         try {
             return get(k);

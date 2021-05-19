@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.HikariPoolMXBean;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.proxy.Enhancer;
@@ -88,8 +89,7 @@ public class JdbcExecutor extends Disposable {
     private DataSource dataSource;
     private boolean closeDataSource;
 
-    public JdbcExecutor(String jdbcUrl, String user, String password) {
-        require(jdbcUrl);
+    public JdbcExecutor(@NonNull String jdbcUrl, String user, String password) {
         recognizeUrl(jdbcUrl);
 
         this.jdbcUrl = jdbcUrl;
@@ -97,15 +97,11 @@ public class JdbcExecutor extends Disposable {
         this.password = password;
     }
 
-    public JdbcExecutor(JdbcConfig jdbcConfig) {
-        require(jdbcConfig);
-
+    public JdbcExecutor(@NonNull JdbcConfig jdbcConfig) {
         this.dataSource = createDataSource(jdbcConfig);
     }
 
-    public JdbcExecutor(DataSource dataSource) {
-        require(dataSource);
-
+    public JdbcExecutor(@NonNull DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -261,9 +257,7 @@ public class JdbcExecutor extends Disposable {
     }
 
     @SneakyThrows
-    public int[] executeBatch(String sql, List<Object[]> batchParams) {
-        require(sql, batchParams);
-
+    public int[] executeBatch(@NonNull String sql, @NonNull List<Object[]> batchParams) {
         try (Connection conn = createConnection(); PreparedStatement cmd = conn.prepareStatement(sql)) {
             conn.setAutoCommit(false);
             for (Object[] params : batchParams) {
@@ -315,8 +309,7 @@ public class JdbcExecutor extends Disposable {
     }
 
     @SneakyThrows
-    public int[] executeBatch(List<String> batchSql) {
-        require(batchSql);
+    public int[] executeBatch(@NonNull List<String> batchSql) {
         try (Connection conn = createConnection(); Statement cmd = conn.createStatement()) {
             conn.setAutoCommit(false);
             for (String sql : batchSql) {
