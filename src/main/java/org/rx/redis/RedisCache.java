@@ -54,7 +54,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         BiTuple<String, Integer, String> resolve = resolve(redisUrl);
         log.info("RedissonClient {} -> {}", redisUrl, resolve);
         Config config = new Config();
-        config.setExecutor(Tasks.getExecutor());
+        config.setExecutor(Tasks.pool());
         if (jdkCodec) {
             config.setCodec(new SerializationCodec());
         }
