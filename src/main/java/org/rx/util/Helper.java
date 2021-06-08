@@ -23,8 +23,7 @@ import static org.rx.core.App.*;
 
 @Slf4j
 public class Helper {
-    @SneakyThrows
-    public static void sendEmail(@NonNull String password, String body,@NonNull String toEmail) {
+    public static void sendEmail(@NonNull String password, String body, @NonNull String toEmail) {
         final String fromEmail = "17091916400@163.com";
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.163.com");
@@ -36,21 +35,20 @@ public class Helper {
             }
         });
 
-        MimeMessage msg = new MimeMessage(session);
-        msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
-        msg.addHeader("format", "flowed");
-        msg.addHeader("Content-Transfer-Encoding", "8bit");
-
-        msg.setFrom(new InternetAddress(fromEmail, "System"));
-        msg.setReplyTo(InternetAddress.parse("no_reply@f-li.cn", false));
-
-        msg.setSubject("Notification", "UTF-8");
-        msg.setText(body, "UTF-8");
-        msg.setSentDate(new Date());
-
-        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
-
         try {
+            MimeMessage msg = new MimeMessage(session);
+            msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
+            msg.addHeader("format", "flowed");
+            msg.addHeader("Content-Transfer-Encoding", "8bit");
+
+            msg.setFrom(new InternetAddress(fromEmail, "System"));
+            msg.setReplyTo(InternetAddress.parse("no_reply@f-li.cn", false));
+
+            msg.setSubject("Notification", "UTF-8");
+            msg.setText(body, "UTF-8");
+            msg.setSentDate(new Date());
+
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
             Transport.send(msg);
         } catch (Exception e) {
             log.warn("sendEmail {}", e.getMessage());
