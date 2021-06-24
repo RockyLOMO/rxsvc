@@ -49,7 +49,7 @@
         <shallow>true</shallow>
         <gpg.skip>true</gpg.skip>
         <lombok.version>1.18.20</lombok.version>
-        <rxlib.version>2.17.3-SNAPSHOT</rxlib.version>
+        <rxlib.version>2.17.4-SNAPSHOT</rxlib.version>
         <redisson.version>3.15.6</redisson.version>
         <HikariCP.version>4.0.1</HikariCP.version>
         <druid.version>1.2.1</druid.version>
