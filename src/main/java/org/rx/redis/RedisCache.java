@@ -2,7 +2,6 @@ package org.rx.redis;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
@@ -13,7 +12,6 @@ import org.redisson.client.RedisClientConfig;
 import org.redisson.codec.SerializationCodec;
 import org.redisson.config.Config;
 import org.rx.bean.BiTuple;
-import org.rx.bean.DateTime;
 import org.rx.bean.RxConfig;
 import org.rx.bean.Tuple;
 import org.rx.core.App;
@@ -32,21 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class RedisCache<TK, TV> implements Cache<TK, TV> {
-    public static final int ONE_DAY_EXPIRE = 60 * 24;
-
-    public static int todayEffective() {
-        return todayEffective(ONE_DAY_EXPIRE);
-    }
-
-    public static int todayEffective(int expireMinutes) {
-        DateTime now = DateTime.now(), expire = now.addMinutes(expireMinutes);
-        DateTime max = DateTime.valueOf(String.format("%s 23:59:59", now.toDateString()), DateTime.FORMATS.first());
-        if (expire.before(max)) {
-            return expireMinutes;
-        }
-        return (int) max.subtract(now).getTotalMinutes();
-    }
-
     public static RedissonClient create(String redisUrl) {
         return create(redisUrl, false);
     }
@@ -90,9 +73,6 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         return RedisClient.create(config);
     }
 
-    //    @Getter
-//    @Setter
-//    private int expireMinutes = PERSISTENT_EXPIRE;
     @Getter
     private final RedissonClient client;
     private final ConcurrentHashMap<String, TK> keyMap = new ConcurrentHashMap<>();
@@ -203,9 +183,9 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         RBucket bucket = client.getBucket(transferKey(k));
         TV v = check(bucket.get());
         if (v != null) {
-//            if (isSlidingExpiration) {
-            bucket.expireAsync(expireMinutes, TimeUnit.MINUTES);
-//            }
+            if (expiration.getSlidingExpiration() > 0) {
+                bucket.expireAsync(expireMinutes, TimeUnit.MINUTES);
+            }
             return v;
         }
         put(k, v = biFunc.invoke(k), expiration);
