@@ -5,13 +5,13 @@ import org.rx.core.Cache;
 import org.rx.core.Container;
 import org.rx.core.Strings;
 import org.rx.core.exception.InvalidException;
-import org.rx.redis.HybridCache;
 import org.rx.redis.RedisCache;
+import org.rx.redis.RedisLocalCache;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.rx.core.Cache.LRU_CACHE;
+import static org.rx.core.Cache.DISTRIBUTED_CACHE;
 
 @Configuration
 @Slf4j
@@ -25,8 +25,8 @@ public class BeanRegister {
             throw new InvalidException("app.redisUrl is null");
         }
 
-        HybridCache<TK, TV> cache = new HybridCache<>(redisConfig.getRedisUrl(), Cache.getInstance(LRU_CACHE), redisConfig.getStoreUrl());
-        Container.getInstance().register(LRU_CACHE, cache);
+        RedisLocalCache<TK, TV> cache = new RedisLocalCache<>(redisConfig.getRedisUrl(), Cache.getInstance(DISTRIBUTED_CACHE));
+        Container.getInstance().register(DISTRIBUTED_CACHE, cache);
         log.info("register HybridCache ok");
         return cache;
     }

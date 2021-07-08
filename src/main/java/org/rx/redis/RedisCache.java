@@ -18,10 +18,12 @@ import org.rx.bean.RxConfig;
 import org.rx.bean.Tuple;
 import org.rx.core.App;
 import org.rx.core.Cache;
+import org.rx.core.CacheExpirations;
 import org.rx.core.Tasks;
 import org.rx.util.function.BiFunc;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -31,15 +33,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisCache<TK, TV> implements Cache<TK, TV> {
     public static final int ONE_DAY_EXPIRE = 60 * 24;
-    public static final int PERSISTENT_EXPIRE = -1;
 
     public static int todayEffective() {
-        return todayEffective(HybridCache.ONE_DAY_EXPIRE);
+        return todayEffective(ONE_DAY_EXPIRE);
     }
 
     public static int todayEffective(int expireMinutes) {
         DateTime now = DateTime.now(), expire = now.addMinutes(expireMinutes);
-        DateTime max = DateTime.valueOf(String.format("%s 23:59:59", now.toDateString()), DateTime.Formats.first());
+        DateTime max = DateTime.valueOf(String.format("%s 23:59:59", now.toDateString()), DateTime.FORMATS.first());
         if (expire.before(max)) {
             return expireMinutes;
         }
@@ -59,7 +60,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
             config.setCodec(new SerializationCodec());
         }
         RxConfig rxConfig = App.getConfig();
-        int minPoolSize = Math.max(2, rxConfig.getNetMinPoolSize());
+        int minPoolSize = 2;
         int maxPoolSize = Math.max(minPoolSize, rxConfig.getNetMaxPoolSize());
         config.useSingleServer().setKeepAlive(true).setTcpNoDelay(true)
                 .setConnectionMinimumIdleSize(minPoolSize).setConnectionPoolSize(maxPoolSize)
@@ -89,20 +90,17 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         return RedisClient.create(config);
     }
 
-    @Getter
-    @Setter
-    private int expireMinutes = NON_EXPIRE_MINUTES;
-    @Getter
-    @Setter
-    private boolean isSlidingExpiration;
+    //    @Getter
+//    @Setter
+//    private int expireMinutes = PERSISTENT_EXPIRE;
     @Getter
     private final RedissonClient client;
     private final ConcurrentHashMap<String, TK> keyMap = new ConcurrentHashMap<>();
     protected final Tuple<BiFunc<TV, Serializable>, BiFunc<Serializable, TV>> onNotSerializable;
 
     @Override
-    public long size() {
-        return client.getKeys().count();
+    public int size() {
+        return (int) client.getKeys().count();
     }
 
     public RedisCache(String redisUrl) {
@@ -128,6 +126,16 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         return keys;
     }
 
+    @Override
+    public Collection<TV> values() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Set<Entry<TK, TV>> entrySet() {
+        throw new UnsupportedOperationException();
+    }
+
     protected String transferKey(@NonNull TK k) {
         if (k instanceof String) {
             return k.toString();
@@ -143,12 +151,13 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
 
     @Override
     public TV put(TK k, TV v) {
-        return put(k, v, expireMinutes);
+        return put(k, v, CacheExpirations.NON_EXPIRE);
     }
 
     @SneakyThrows
     @Override
-    public TV put(TK k, @NonNull TV v, int expireMinutes) {
+    public TV put(TK k, @NonNull TV v, CacheExpirations expiration) {
+        int expireMinutes = expiration.getSlidingExpiration();
         if (!(v instanceof Serializable) && onNotSerializable != null) {
             Serializable item = onNotSerializable.left.invoke(v);
             RBucket<Serializable> bucket = client.getBucket(transferKey(k));
@@ -160,8 +169,8 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     }
 
     @Override
-    public TV remove(TK k) {
-        return check(client.getBucket(transferKey(k)).getAndDelete());
+    public TV remove(Object k) {
+        return check(client.getBucket(transferKey((TK) k)).getAndDelete());
     }
 
     @SneakyThrows
@@ -178,27 +187,28 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     }
 
     @Override
-    public TV get(TK k) {
-        return check(client.getBucket(transferKey(k)).get());
+    public TV get(Object k) {
+        return check(client.getBucket(transferKey((TK) k)).get());
     }
 
     @Override
     public TV get(TK k, BiFunc<TK, TV> biFunc) {
-        return get(k, biFunc, expireMinutes);
+        return get(k, biFunc, CacheExpirations.NON_EXPIRE);
     }
 
     @SneakyThrows
     @Override
-    public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, int expireMinutes) {
+    public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, CacheExpirations expiration) {
+        int expireMinutes = expiration.getSlidingExpiration();
         RBucket bucket = client.getBucket(transferKey(k));
         TV v = check(bucket.get());
         if (v != null) {
-            if (isSlidingExpiration) {
-                bucket.expireAsync(expireMinutes, TimeUnit.MINUTES);
-            }
+//            if (isSlidingExpiration) {
+            bucket.expireAsync(expireMinutes, TimeUnit.MINUTES);
+//            }
             return v;
         }
-        put(k, v = biFunc.invoke(k), expireMinutes);
+        put(k, v = biFunc.invoke(k), expiration);
         return v;
     }
 }

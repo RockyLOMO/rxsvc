@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.rx.core.Cache;
+import org.rx.core.CacheExpirations;
 import org.rx.util.function.BiFunc;
 
 import java.io.Serializable;
@@ -20,8 +21,8 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
     private final BloomFilter<String> notSerializable = BloomFilter.create(Funnels.unencodedCharsFunnel(), 10000);
 
     @Override
-    public long size() {
-        return isNull(quietly(super::size), 0L) + local.size();
+    public int size() {
+        return isNull(quietly(super::size), 0) + local.size();
     }
 
     public RedisLocalCache(String redisUrl, Cache<TK, TV> local) {
@@ -37,11 +38,11 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
     }
 
     @Override
-    public TV put(TK k, @NonNull TV v, int expireMinutes) {
+    public TV put(TK k, @NonNull TV v, CacheExpirations expiration) {
         Class type = v.getClass();
         try {
             if (v instanceof Serializable && !notSerializable.mightContain(type.getName())) {
-                return super.put(k, v, expireMinutes);
+                return super.put(k, v, expiration);
             } else {
                 if (!notSerializable.mightContain(type.getName())) {
                     log.warn("put fail, {} not serializable", type.getName());
@@ -58,7 +59,7 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
     }
 
     @Override
-    public TV remove(TK k) {
+    public TV remove(Object k) {
         TV v = local.remove(k);
         if (v != null) {
             return v;
@@ -73,7 +74,7 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
     }
 
     @Override
-    public TV get(TK k) {
+    public TV get(Object k) {
         TV v = local.get(k);
         if (v != null) {
             return v;
@@ -83,11 +84,11 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
 
     @SneakyThrows
     @Override
-    public TV get(TK k, BiFunc<TK, TV> biFunc, int expireMinutes) {
+    public TV get(TK k, BiFunc<TK, TV> biFunc, CacheExpirations expiration) {
         TV v = local.get(k);
         if (v != null) {
             return v;
         }
-        return super.get(k, biFunc, expireMinutes);
+        return super.get(k, biFunc, expiration);
     }
 }
