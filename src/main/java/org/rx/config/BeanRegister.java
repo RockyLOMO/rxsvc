@@ -27,7 +27,7 @@ public class BeanRegister {
 
         RedisLocalCache<TK, TV> cache = new RedisLocalCache<>(redisConfig.getRedisUrl(), Cache.getInstance(DISTRIBUTED_CACHE));
         Container.getInstance().register(DISTRIBUTED_CACHE, cache);
-        log.info("register HybridCache ok");
+        log.info("register RedisCache ok");
         return cache;
     }
 }
