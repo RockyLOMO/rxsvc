@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.rx.core.Cache.DISTRIBUTED_CACHE;
+import static org.rx.core.Cache.LOCAL_CACHE;
 
 @Configuration
 @Slf4j
@@ -25,7 +26,7 @@ public class BeanRegister {
             throw new InvalidException("app.redisUrl is null");
         }
 
-        RedisLocalCache<TK, TV> cache = new RedisLocalCache<>(redisConfig.getRedisUrl(), Cache.getInstance(DISTRIBUTED_CACHE));
+        RedisLocalCache<TK, TV> cache = new RedisLocalCache<>(redisConfig.getRedisUrl(), Cache.getInstance(LOCAL_CACHE));
         Container.getInstance().register(DISTRIBUTED_CACHE, cache);
         log.info("register HybridCache ok");
         return cache;
