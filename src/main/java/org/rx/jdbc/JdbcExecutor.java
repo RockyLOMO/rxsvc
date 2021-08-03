@@ -8,13 +8,13 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
 import org.rx.bean.$;
 import org.rx.core.StringBuilder;
 import org.rx.core.*;
 import org.rx.core.exception.InvalidException;
 import org.rx.util.function.BiFunc;
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.MethodInterceptor;
 
 import javax.sql.DataSource;
 import java.net.InetSocketAddress;
