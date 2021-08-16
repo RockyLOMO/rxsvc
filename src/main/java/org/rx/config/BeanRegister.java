@@ -22,7 +22,7 @@ public class BeanRegister {
     @Bean
     @ConditionalOnProperty(name = REDIS_PROP_NAME)
     public <TK, TV> RedisCache<TK, TV> redisCache(RedisConfig redisConfig) {
-        if (Strings.isNullOrEmpty(redisConfig.getRedisUrl())) {
+        if (Strings.isEmpty(redisConfig.getRedisUrl())) {
             throw new InvalidException("app.redisUrl is null");
         }
 

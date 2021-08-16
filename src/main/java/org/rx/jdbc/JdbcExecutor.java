@@ -27,7 +27,7 @@ import static org.rx.core.App.*;
 public class JdbcExecutor extends Disposable {
     public static String buildMysqlConnectionString(String host, int port, String database, int connectTimeout, int readWriteTimeout) {
         StringBuilder connStr = new StringBuilder("jdbc:mysql://" + host + ":" + port);
-        if (!Strings.isNullOrEmpty(database)) {
+        if (!Strings.isEmpty(database)) {
             connStr.append("/" + database);
         }
         connStr.append("?useUnicode=true&characterEncoding=utf-8");

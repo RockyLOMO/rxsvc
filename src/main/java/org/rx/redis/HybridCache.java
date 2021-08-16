@@ -38,7 +38,7 @@
 ////        setExpireMinutes(CONFIG.getCacheExpireMinutes());
 //        setSlidingExpiration(true);
 //
-//        if (!Strings.isNullOrEmpty(storeUrl)) {
+//        if (!Strings.isEmpty(storeUrl)) {
 //            Tasks.schedule(this::refreshUsedMemory, 1000 * 16);
 //            store = new PikaDb<>(storeUrl);
 //            store.setSlidingExpiration(false);
