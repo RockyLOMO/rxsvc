@@ -16,7 +16,7 @@ import org.rx.bean.RxConfig;
 import org.rx.bean.Tuple;
 import org.rx.core.App;
 import org.rx.core.Cache;
-import org.rx.core.CacheExpirations;
+import org.rx.core.CacheExpiration;
 import org.rx.core.Tasks;
 import org.rx.util.function.BiFunc;
 
@@ -131,12 +131,12 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
 
     @Override
     public TV put(TK k, TV v) {
-        return put(k, v, CacheExpirations.NON_EXPIRE);
+        return put(k, v, CacheExpiration.NON_EXPIRE);
     }
 
     @SneakyThrows
     @Override
-    public TV put(TK k, @NonNull TV v, CacheExpirations expiration) {
+    public TV put(TK k, @NonNull TV v, CacheExpiration expiration) {
         int expireMinutes = expiration.getSlidingExpiration();
         if (!(v instanceof Serializable) && onNotSerializable != null) {
             Serializable item = onNotSerializable.left.invoke(v);
@@ -173,12 +173,12 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
 
     @Override
     public TV get(TK k, BiFunc<TK, TV> biFunc) {
-        return get(k, biFunc, CacheExpirations.NON_EXPIRE);
+        return get(k, biFunc, CacheExpiration.NON_EXPIRE);
     }
 
     @SneakyThrows
     @Override
-    public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, CacheExpirations expiration) {
+    public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, CacheExpiration expiration) {
         int expireMinutes = expiration.getSlidingExpiration();
         RBucket bucket = client.getBucket(transferKey(k));
         TV v = check(bucket.get());

@@ -7,7 +7,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.rx.core.Cache;
-import org.rx.core.CacheExpirations;
+import org.rx.core.CacheExpiration;
 import org.rx.util.function.BiFunc;
 
 import java.io.Serializable;
@@ -38,7 +38,7 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
     }
 
     @Override
-    public TV put(TK k, @NonNull TV v, CacheExpirations expiration) {
+    public TV put(TK k, @NonNull TV v, CacheExpiration expiration) {
         Class type = v.getClass();
         try {
             if (v instanceof Serializable && !notSerializable.mightContain(type.getName())) {
@@ -84,7 +84,7 @@ public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
 
     @SneakyThrows
     @Override
-    public TV get(TK k, BiFunc<TK, TV> biFunc, CacheExpirations expiration) {
+    public TV get(TK k, BiFunc<TK, TV> biFunc, CacheExpiration expiration) {
         TV v = local.get(k);
         if (v != null) {
             return v;
