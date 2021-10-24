@@ -5,7 +5,7 @@ import org.rx.bean.NEnum;
 import org.rx.core.Arrays;
 import org.rx.core.NQuery;
 import org.rx.core.Strings;
-import org.rx.core.exception.InvalidException;
+import org.rx.exception.InvalidException;
 
 import java.util.Collections;
 import java.util.List;

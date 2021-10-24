@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import org.rx.core.NQuery;
-import org.rx.core.exception.InvalidException;
+import org.rx.exception.InvalidException;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;

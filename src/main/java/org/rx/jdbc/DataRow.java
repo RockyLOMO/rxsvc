@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.rx.core.Reflects;
-import org.rx.core.exception.InvalidException;
+import org.rx.exception.InvalidException;
 
 import java.io.Serializable;
 import java.util.ArrayList;

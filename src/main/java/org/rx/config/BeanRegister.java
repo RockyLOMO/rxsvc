@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.rx.core.Cache;
 import org.rx.core.Container;
 import org.rx.core.Strings;
-import org.rx.core.exception.InvalidException;
+import org.rx.exception.InvalidException;
 import org.rx.redis.RedisCache;
 import org.rx.redis.RedisLocalCache;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
