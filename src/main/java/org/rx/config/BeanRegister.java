@@ -11,8 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.rx.core.Cache.DISTRIBUTED_CACHE;
-import static org.rx.core.Cache.MEMORY_CACHE;
+import static org.rx.core.Cache.*;
 
 @Configuration
 @Slf4j
@@ -27,7 +26,7 @@ public class BeanRegister {
         }
 
         RedisLocalCache<TK, TV> cache = new RedisLocalCache<>(redisConfig.getRedisUrl(), Cache.getInstance(MEMORY_CACHE));
-        Container.INSTANCE.register(DISTRIBUTED_CACHE, cache);
+        Container.register(MAIN_CACHE, cache);
         log.info("register RedisCache ok");
         return cache;
     }

@@ -51,8 +51,6 @@
         <lombok.version>1.18.20</lombok.version>
         <rxlib.version>2.17.6-SNAPSHOT</rxlib.version>
         <redisson.version>3.16.1</redisson.version>
-        <HikariCP.version>4.0.1</HikariCP.version>
-        <druid.version>1.2.1</druid.version>
 
         <javaxMail.version>1.6.2</javaxMail.version>
         <poi.version>4.1.2</poi.version>
@@ -67,7 +65,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>2.3.5.RELEASE</version>
+            <version>2.4.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -83,16 +81,6 @@
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
             <version>${redisson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${HikariCP.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${druid.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
