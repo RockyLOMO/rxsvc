@@ -133,15 +133,15 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     @SneakyThrows
     @Override
     public TV put(TK k, @NonNull TV v, CacheExpiration expiration) {
-        int expireMinutes = expiration.getSlidingExpiration();
+        int expireSeconds = expiration.getSlidingExpiration();
         if (!(v instanceof Serializable) && onNotSerializable != null) {
             Serializable item = onNotSerializable.left.invoke(v);
             RBucket<Serializable> bucket = client.getBucket(transferKey(k));
-            return onNotSerializable.right.invoke(expireMinutes < 1 ? bucket.getAndSet(item) : bucket.getAndSet(item, expireMinutes, TimeUnit.MINUTES));
+            return onNotSerializable.right.invoke(expireSeconds < 1 ? bucket.getAndSet(item) : bucket.getAndSet(item, expireSeconds, TimeUnit.SECONDS));
         }
 
         RBucket<TV> bucket = client.getBucket(transferKey(k));
-        return expireMinutes < 1 ? bucket.getAndSet(v) : bucket.getAndSet(v, expireMinutes, TimeUnit.MINUTES);
+        return expireSeconds < 1 ? bucket.getAndSet(v) : bucket.getAndSet(v, expireSeconds, TimeUnit.SECONDS);
     }
 
     @Override
@@ -175,12 +175,12 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     @SneakyThrows
     @Override
     public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, CacheExpiration expiration) {
-        int expireMinutes = expiration.getSlidingExpiration();
+        int expireSeconds = expiration.getSlidingExpiration();
         RBucket bucket = client.getBucket(transferKey(k));
         TV v = check(bucket.get());
         if (v != null) {
             if (expiration.getSlidingExpiration() > 0) {
-                bucket.expireAsync(expireMinutes, TimeUnit.MINUTES);
+                bucket.expireAsync(expireSeconds, TimeUnit.SECONDS);
             }
             return v;
         }
