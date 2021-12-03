@@ -6,7 +6,7 @@ import org.rx.core.Container;
 import org.rx.core.Strings;
 import org.rx.exception.InvalidException;
 import org.rx.redis.RedisCache;
-import org.rx.redis.RedisLocalCache;
+//import org.rx.redis.RedisLocalCache;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +25,8 @@ public class BeanRegister {
             throw new InvalidException("app.redisUrl is null");
         }
 
-        RedisLocalCache<TK, TV> cache = new RedisLocalCache<>(redisConfig.getRedisUrl(), Cache.getInstance(MEMORY_CACHE));
+//        RedisLocalCache<TK, TV> cache = new RedisLocalCache<>(redisConfig.getRedisUrl(), Cache.getInstance(MEMORY_CACHE));
+        RedisCache<TK, TV> cache = new RedisCache<>(redisConfig.getRedisUrl());
         Container.register(MAIN_CACHE, cache);
         log.info("register RedisCache ok");
         return cache;

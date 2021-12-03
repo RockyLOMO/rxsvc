@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.rx.core.App.require;
-
 public class UrlGenerator implements Iterable<String> {
     private final List<String> urls = new ArrayList<>();
 
