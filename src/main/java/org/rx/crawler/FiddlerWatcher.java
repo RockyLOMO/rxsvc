@@ -12,6 +12,8 @@ public interface FiddlerWatcher extends EventTarget<FiddlerWatcher> {
     class CallbackEventArgs extends EventArgs {
         private final String key;
         private final List<String> content;
+
+        public Object state;
     }
 
     String EVENT_CALLBACK = "onCallback";

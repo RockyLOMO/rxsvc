@@ -7,11 +7,11 @@ import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateLimiterConfig;
 import org.redisson.api.RateType;
 import org.rx.config.BeanRegister;
+import org.rx.config.MiddlewareConfig;
 import org.rx.core.Arrays;
 import org.rx.core.NQuery;
 import org.rx.core.Strings;
 import org.rx.core.ThreadPool;
-import org.rx.config.RedisConfig;
 import org.rx.util.Servlets;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class RateLimiter {
         boolean tryAcquire();
     }
 
-    private final RedisConfig redisConfig;
+    private final MiddlewareConfig redisConfig;
     private final RedisCache<?, ?> redisCache;
     private final Map<String, RateLimiterAdapter> rateLimiters = new ConcurrentHashMap<>();
 
