@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.rx.bean.FlagsEnum;
+import org.rx.config.MiddlewareConfig;
 import org.rx.core.*;
 import org.rx.exception.InvalidException;
 import org.rx.net.Sockets;
@@ -96,16 +97,7 @@ public abstract class RemoteBrowser implements Browser {
         int port = listener.nextIdleId(type);
         InetSocketAddress newEndpoint = Sockets.newEndpoint(endpoint, port);
         log.info("RBrowser connect {} -> {}[{}]", type, newEndpoint, endpoint);
-        RemoteBrowser browser = wrap(newEndpoint);
-        //重连后id返回不正确
-//        if (browser.getType() != type) {
-//            log.info("RBrowser FIX {}", browser.getType());
-//            tryClose(listener);
-//            facade.remove(endpoint);
-//            sleep(1000);
-//            return create(type);
-//        }
-        return browser;
+        return wrap(newEndpoint);
     }
 
     static RemoteBrowser wrap(InetSocketAddress endpoint) {
