@@ -1,2 +1,2 @@
-# mongodb-jdbc
-mongodb sql CURD
+# ℞lib-delta
+A set of middleware utilities for Java.

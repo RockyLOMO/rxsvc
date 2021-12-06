@@ -9,6 +9,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.rx.config.MiddlewareConfig;
+import org.rx.spring.SpringContext;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -23,7 +25,12 @@ import static org.rx.core.App.*;
 
 @Slf4j
 public class Helper {
-    public static void sendEmail(@NonNull String password, String body, @NonNull String toEmail) {
+    public static void sendEmail(String body) {
+        MiddlewareConfig config = SpringContext.getBean(MiddlewareConfig.class);
+        Helper.sendEmail(body, config.getSmtpPwd(), config.getSmtpTo());
+    }
+
+    public static void sendEmail(String body, @NonNull String password, @NonNull String toEmail) {
         final String fromEmail = "17091916400@163.com";
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.163.com");

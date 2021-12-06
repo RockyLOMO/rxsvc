@@ -23,4 +23,7 @@ public class MiddlewareConfig {
 
     private String crawlerEndpoint;
     private String fiddlerEndpoint;
+
+    private String smtpPwd;
+    private String smtpTo;
 }
