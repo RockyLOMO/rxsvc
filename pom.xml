@@ -49,7 +49,7 @@
         <shallow>true</shallow>
         <gpg.skip>true</gpg.skip>
         <lombok.version>1.18.20</lombok.version>
-        <rxlib.version>2.17.7-SNAPSHOT</rxlib.version>
+        <rxlib.version>2.17.8-SNAPSHOT</rxlib.version>
         <redisson.version>3.16.5</redisson.version>
 
         <javaxMail.version>1.6.2</javaxMail.version>
