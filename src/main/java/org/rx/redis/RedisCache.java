@@ -125,23 +125,22 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         return keyMap.getOrDefault(k, (TK) k);
     }
 
-    @Override
-    public TV put(TK k, TV v) {
-        return put(k, v, CacheExpiration.NON_EXPIRE);
-    }
-
     @SneakyThrows
     @Override
-    public TV put(TK k, @NonNull TV v, CacheExpiration expiration) {
-        int expireSeconds = expiration.getSlidingExpiration();
+    public TV put(TK k, @NonNull TV v, CachePolicy policy) {
+        if (policy == null) {
+            policy = CachePolicy.NON_EXPIRE;
+        }
+
+        long expireMillis = policy.getSlidingExpiration();
         if (!(v instanceof Serializable) && onNotSerializable != null) {
             Serializable item = onNotSerializable.left.invoke(v);
             RBucket<Serializable> bucket = client.getBucket(transferKey(k));
-            return onNotSerializable.right.invoke(expireSeconds < 1 ? bucket.getAndSet(item) : bucket.getAndSet(item, expireSeconds, TimeUnit.SECONDS));
+            return onNotSerializable.right.invoke(expireMillis < 1 ? bucket.getAndSet(item) : bucket.getAndSet(item, expireMillis, TimeUnit.MILLISECONDS));
         }
 
         RBucket<TV> bucket = client.getBucket(transferKey(k));
-        return expireSeconds < 1 ? bucket.getAndSet(v) : bucket.getAndSet(v, expireSeconds, TimeUnit.SECONDS);
+        return expireMillis < 1 ? bucket.getAndSet(v) : bucket.getAndSet(v, expireMillis, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -167,24 +166,23 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
         return check(client.getBucket(transferKey((TK) k)).get());
     }
 
-    @Override
-    public TV get(TK k, BiFunc<TK, TV> biFunc) {
-        return get(k, biFunc, CacheExpiration.NON_EXPIRE);
-    }
-
     @SneakyThrows
     @Override
-    public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, CacheExpiration expiration) {
-        int expireSeconds = expiration.getSlidingExpiration();
+    public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, CachePolicy policy) {
+        if (policy == null) {
+            policy = CachePolicy.NON_EXPIRE;
+        }
+
+        long expireMillis = policy.getSlidingExpiration();
         RBucket<?> bucket = client.getBucket(transferKey(k));
         TV v = check(bucket.get());
         if (v != null) {
-            if (expiration.getSlidingExpiration() > 0) {
-                bucket.expireAsync(expireSeconds, TimeUnit.SECONDS);
+            if (expireMillis > 0) {
+                bucket.expireAsync(expireMillis, TimeUnit.MILLISECONDS);
             }
             return v;
         }
-        put(k, v = biFunc.invoke(k), expiration);
+        put(k, v = biFunc.invoke(k), policy);
         return v;
     }
 }
