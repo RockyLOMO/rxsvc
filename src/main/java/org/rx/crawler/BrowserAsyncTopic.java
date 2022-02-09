@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RPriorityBlockingQueue;
 import org.redisson.api.RSetCache;
 import org.redisson.api.RTopic;
-import org.rx.core.App;
 import org.rx.core.Constants;
 import org.rx.core.ManualResetEvent;
+import org.rx.exception.ExceptionHandler;
 import org.rx.redis.RedisCache;
 import org.rx.util.function.TripleAction;
 import org.rx.util.function.TripleFunc;
@@ -99,7 +99,7 @@ public class BrowserAsyncTopic {
                     }
                     ((TripleAction<RemoteBrowser, String>) future.callback).invoke(browser, asyncResponse.getRequest().getUrl());
                 } catch (Throwable e) {
-                    App.log("Async {} error", future.asyncId, e);
+                    ExceptionHandler.INSTANCE.log("Async {} error", future.asyncId, e);
                     future.exception = e;
                 } finally {
                     callbacks.remove(future.asyncId);
