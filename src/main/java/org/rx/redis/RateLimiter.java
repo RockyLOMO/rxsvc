@@ -8,10 +8,7 @@ import org.redisson.api.RateLimiterConfig;
 import org.redisson.api.RateType;
 import org.rx.config.BeanRegister;
 import org.rx.config.MiddlewareConfig;
-import org.rx.core.Arrays;
-import org.rx.core.NQuery;
-import org.rx.core.Strings;
-import org.rx.core.ThreadPool;
+import org.rx.core.*;
 import org.rx.util.Servlets;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -33,7 +30,7 @@ public class RateLimiter {
     private final Map<String, RateLimiterAdapter> rateLimiters = new ConcurrentHashMap<>();
 
     private int permitsPerSecond() {
-        return Math.max(redisConfig.getLimiterPermits(), ThreadPool.CPU_THREADS);
+        return Math.max(redisConfig.getLimiterPermits(), Constants.CPU_THREADS);
     }
 
     public boolean tryAcquire() {

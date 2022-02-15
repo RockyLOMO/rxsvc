@@ -12,7 +12,6 @@ import org.redisson.client.RedisClientConfig;
 import org.redisson.codec.SerializationCodec;
 import org.redisson.config.Config;
 import org.rx.bean.BiTuple;
-import org.rx.bean.RxConfig;
 import org.rx.bean.Tuple;
 import org.rx.core.*;
 import org.rx.util.function.BiFunc;
@@ -40,7 +39,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
             config.setCodec(new SerializationCodec());
         }
         int minPoolSize = 2;
-        int maxPoolSize = Math.max(minPoolSize, Container.get(RxConfig.class).getNetMaxPoolSize());
+        int maxPoolSize = Math.max(minPoolSize, RxConfig.INSTANCE.getNet().getPoolMaxSize());
         config.useSingleServer().setKeepAlive(true).setTcpNoDelay(true)
                 .setConnectionMinimumIdleSize(minPoolSize).setConnectionPoolSize(maxPoolSize)
                 .setSubscriptionConnectionMinimumIdleSize(minPoolSize).setSubscriptionConnectionPoolSize(maxPoolSize)

@@ -27,7 +27,7 @@ public class BeanRegister {
 
 //        RedisLocalCache<TK, TV> cache = new RedisLocalCache<>(redisConfig.getRedisUrl(), Cache.getInstance(MEMORY_CACHE));
         RedisCache<TK, TV> cache = new RedisCache<>(redisConfig.getRedisUrl());
-        Container.register(MAIN_CACHE, cache);
+        Container.register(Cache.class, cache);
         log.info("register RedisCache ok");
         return cache;
     }

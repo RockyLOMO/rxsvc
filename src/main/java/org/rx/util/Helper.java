@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import static org.rx.core.App.*;
+import static org.rx.core.Extends.tryClose;
 
 @Slf4j
 public class Helper {
