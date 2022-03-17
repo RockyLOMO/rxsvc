@@ -49,7 +49,7 @@
         <shallow>true</shallow>
         <gpg.skip>true</gpg.skip>
         <lombok.version>1.18.22</lombok.version>
-        <rxlib.version>2.17.10-SNAPSHOT</rxlib.version>
+        <rxlib.version>2.17.11-SNAPSHOT</rxlib.version>
         <redisson.version>3.16.7</redisson.version>
 
         <javaxMail.version>1.6.2</javaxMail.version>
@@ -61,11 +61,6 @@
             <groupId>com.github.rockylomo</groupId>
             <artifactId>rxlib</artifactId>
             <version>${rxlib.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>2.4.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
