@@ -164,7 +164,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     @SneakyThrows
     @Override
     public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, CachePolicy policy) {
-        long expireMillis = policy.getSlidingExpiration();
+        long expireMillis = policy != null ? policy.getSlidingExpiration() : Constants.NON_EXPIRE;
         RBucket<?> bucket = client.getBucket(transferKey(k));
         TV v = check(bucket.get());
         if (v != null) {
