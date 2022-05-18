@@ -127,7 +127,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     @SneakyThrows
     @Override
     public TV put(TK k, @NonNull TV v, CachePolicy policy) {
-        long expireMillis = policy != null ? policy.expiration() : Constants.NON_EXPIRE;
+        long expireMillis = policy != null ? policy.expiration() : -1;
         if (!(v instanceof Serializable) && onNotSerializable != null) {
             Serializable item = onNotSerializable.left.invoke(v);
             RBucket<Serializable> bucket = client.getBucket(transferKey(k));
@@ -164,10 +164,10 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
     @SneakyThrows
     @Override
     public TV get(TK k, @NonNull BiFunc<TK, TV> biFunc, CachePolicy policy) {
-        long expireMillis = policy != null ? policy.getSlidingExpiration() : Constants.NON_EXPIRE;
         RBucket<?> bucket = client.getBucket(transferKey(k));
         TV v = check(bucket.get());
-        if (v != null) {
+        if (v != null && policy != null && policy.slidingRenew()) {
+            long expireMillis = policy.expiration(false);
             if (expireMillis > 0) {
                 bucket.expireAsync(expireMillis, TimeUnit.MILLISECONDS);
             }
