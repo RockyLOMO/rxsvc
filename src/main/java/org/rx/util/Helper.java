@@ -3,13 +3,11 @@ package org.rx.util;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.rx.config.MiddlewareConfig;
+import org.rx.core.Numbers;
 import org.rx.spring.SpringContext;
 
 import javax.mail.*;
@@ -22,7 +20,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import static org.rx.core.App.*;
-import static org.rx.core.Extends.tryClose;
+import static org.rx.core.Extends.eq;
 
 @Slf4j
 public class Helper {
@@ -65,21 +63,14 @@ public class Helper {
 
     @SneakyThrows
     public static Map<String, List<Object[]>> readExcel(InputStream in, boolean skipColumn) {
-        return readExcel(in, skipColumn, false);
+        return readExcel(in, false, skipColumn, false);
     }
 
     @SneakyThrows
-    public static Map<String, List<Object[]>> readExcel(InputStream in, boolean skipColumn, boolean keepNullRow) {
+    public static Map<String, List<Object[]>> readExcel(InputStream in, boolean is2003File, boolean skipColumn, boolean keepNullRow) {
         Map<String, List<Object[]>> data = new LinkedHashMap<>();
-        Workbook workbook;
-        try {
-            workbook = new HSSFWorkbook(in);
-        } catch (Exception e) {
-            log.warn("readExcel {}", e.getMessage());
-            //todo in stream pos
-            workbook = new XSSFWorkbook(in);
-        }
-        try {
+        FormulaEvaluator evaluator = null;
+        try (Workbook workbook = is2003File ? new HSSFWorkbook(in) : new XSSFWorkbook(in)) {
             for (int sheetIndex = 0; sheetIndex < workbook.getNumberOfSheets(); sheetIndex++) {
                 List<Object[]> rows = new ArrayList<>();
                 Sheet sheet = workbook.getSheetAt(sheetIndex);
@@ -92,17 +83,42 @@ public class Helper {
                         continue;
                     }
                     List<Object> cells = new ArrayList<>();
-                    for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
+                    short firstCellNum = row.getFirstCellNum();
+                    for (int i = 0; i < row.getLastCellNum(); i++) {
+                        if (i < firstCellNum) {
+                            cells.add(null);
+                            continue;
+                        }
                         Cell cell = row.getCell(i);
                         if (cell == null) {
                             cells.add(null);
                             continue;
                         }
-                        Object value;
 
-                        switch (cell.getCellType()) {
+                        CellType cellType = cell.getCellType();
+                        if (cellType == CellType.FORMULA) {
+                            if (evaluator == null) {
+                                evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+                            }
+                            cellType = evaluator.evaluateFormulaCell(cell);
+                        }
+                        Object value;
+//                        System.out.println(i + ":" + cellType);
+                        switch (cellType) {
                             case NUMERIC:
-                                value = cell.getNumericCellValue();
+                                if (!eq(cell.getCellStyle().getDataFormatString(), "General")) {
+                                    value = cell.getDateCellValue();
+                                } else {
+                                    double n = cell.getNumericCellValue();
+                                    boolean b = Numbers.hasPrecision(n);
+                                    if (b) {
+                                        value = (int) n;
+                                    } else {
+                                        value = n;
+                                    }
+                                    //will auto wrap to double
+//                                    value = b ? (int) n : n;
+                                }
                                 break;
                             case BOOLEAN:
                                 value = cell.getBooleanCellValue();
@@ -125,33 +141,31 @@ public class Helper {
                 }
                 data.put(sheet.getSheetName(), rows);
             }
-        } finally {
-            tryClose(workbook);
         }
         return data;
     }
 
     public static void writeExcel(OutputStream out, Map<String, List<Object[]>> data) {
-        writeExcel(out, data, null);
+        writeExcel(out, false, data, null);
     }
 
     @SneakyThrows
-    public static void writeExcel(OutputStream out, Map<String, List<Object[]>> data, Function<HSSFRow, HSSFRow> onRow) {
-        try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+    public static void writeExcel(OutputStream out, boolean is2003File, Map<String, List<Object[]>> data, Function<Row, Row> onRow) {
+        try (Workbook workbook = is2003File ? new HSSFWorkbook() : new XSSFWorkbook()) {
             for (Map.Entry<String, List<Object[]>> entry : data.entrySet()) {
-                HSSFSheet sheet = workbook.getSheet(entry.getKey());
+                Sheet sheet = workbook.getSheet(entry.getKey());
                 if (sheet == null) {
                     sheet = workbook.createSheet(entry.getKey());
                 }
                 List<Object[]> rows = entry.getValue();
                 for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
-                    HSSFRow row = sheet.getRow(rowIndex);
+                    Row row = sheet.getRow(rowIndex);
                     if (row == null) {
                         row = sheet.createRow(rowIndex);
                     }
                     Object[] cells = rows.get(rowIndex);
                     for (int i = 0; i < cells.length; i++) {
-                        HSSFCell cell = row.getCell(i);
+                        Cell cell = row.getCell(i);
                         if (cell == null) {
                             cell = row.createCell(i);
                         }
