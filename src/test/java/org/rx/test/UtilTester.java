@@ -64,6 +64,7 @@ public class UtilTester {
                 return;
             }
             Helper.writeExcel(new FileOutputStream(Files.changeExtension(excelFile, String.format("%s.xlsx", outIndex.incrementAndGet()))),
+                    false,
                     Collections.singletonMap(sheet, copy));
             copy.clear();
             System.out.println("dump " + outIndex + " file");

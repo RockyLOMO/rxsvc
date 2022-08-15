@@ -62,8 +62,8 @@ public class Helper {
     }
 
     @SneakyThrows
-    public static Map<String, List<Object[]>> readExcel(InputStream in, boolean skipColumn) {
-        return readExcel(in, false, skipColumn, false);
+    public static Map<String, List<Object[]>> readExcel(InputStream in, boolean is2003File) {
+        return readExcel(in, is2003File, false, false);
     }
 
     @SneakyThrows
@@ -145,8 +145,8 @@ public class Helper {
         return data;
     }
 
-    public static void writeExcel(OutputStream out, Map<String, List<Object[]>> data) {
-        writeExcel(out, false, data, null);
+    public static void writeExcel(OutputStream out, boolean is2003File, Map<String, List<Object[]>> data) {
+        writeExcel(out, is2003File, data, null);
     }
 
     @SneakyThrows
