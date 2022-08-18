@@ -8,7 +8,7 @@ import org.redisson.api.RPriorityBlockingQueue;
 import org.redisson.api.RSetCache;
 import org.redisson.api.RTopic;
 import org.rx.core.Constants;
-import org.rx.core.ManualResetEvent;
+import org.rx.core.ResetEventWait;
 import org.rx.exception.ExceptionHandler;
 import org.rx.redis.RedisCache;
 import org.rx.util.function.TripleAction;
@@ -32,7 +32,7 @@ public class BrowserAsyncTopic {
     private class AsyncFuture<T> implements Future<T> {
         private final UUID asyncId;
         private final Object callback;
-        private final ManualResetEvent waiter = new ManualResetEvent();
+        private final ResetEventWait waiter = new ResetEventWait();
         @Getter
         private volatile boolean done;
         private volatile Throwable exception;

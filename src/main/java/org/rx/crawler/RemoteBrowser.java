@@ -160,7 +160,7 @@ public abstract class RemoteBrowser implements Browser {
         require(timeoutSeconds, timeoutSeconds <= 60);
         require(reClickEachSeconds, reClickEachSeconds > 0);
 
-        createWait(timeoutSeconds).retryMillis(reClickEachSeconds * 1000L).retryCallFirst(!skipFirstClick).until(s -> checkComplete.test(s.getInvokedCount()), s -> {
+        createWait(timeoutSeconds).retryEvery(reClickEachSeconds * 1000L, !skipFirstClick).until(s -> checkComplete.test(s.getEvaluatedCount()), s -> {
             try {
                 elementClick(btnSelector, true);
                 log.debug("waitClickComplete {} click ok", btnSelector);
