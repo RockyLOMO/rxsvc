@@ -57,15 +57,15 @@ public interface Browser extends AutoCloseable {
 
     String elementText(String selector);
 
-    NQuery<String> elementsText(String selector);
+    Linq<String> elementsText(String selector);
 
     String elementVal(String selector);
 
-    NQuery<String> elementsVal(String selector);
+    Linq<String> elementsVal(String selector);
 
     String elementAttr(String selector, String... attrArgs);
 
-    NQuery<String> elementsAttr(String selector, String... attrArgs);
+    Linq<String> elementsAttr(String selector, String... attrArgs);
 
     void elementClick(String selector);
 

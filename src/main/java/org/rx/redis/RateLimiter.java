@@ -39,7 +39,7 @@ public class RateLimiter {
 
     public boolean tryAcquire(String clientIp) {
         if (!Arrays.isEmpty(redisConfig.getLimiterWhiteList())
-                && NQuery.of(redisConfig.getLimiterWhiteList()).any(p -> Strings.startsWith(clientIp, p))) {
+                && Linq.from(redisConfig.getLimiterWhiteList()).any(p -> Strings.startsWith(clientIp, p))) {
             return true;
         }
 

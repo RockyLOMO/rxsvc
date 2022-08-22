@@ -112,7 +112,7 @@ public abstract class RemoteBrowser implements Browser {
                 browser.close();
                 return null;
             }
-            if (NQuery.of("createWait", "navigateBlank", "invoke", "invokeMaximize", "waitScriptComplete", "waitClickComplete").contains(m.getName())) {
+            if (Linq.from("createWait", "navigateBlank", "invoke", "invokeMaximize", "waitScriptComplete", "waitClickComplete").contains(m.getName())) {
                 return p.fastInvokeSuper();
             }
             return p.fastInvoke(browser);
