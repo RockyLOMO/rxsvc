@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.rx.core.Extends.eq;
+import static org.rx.core.Extends.sneakyInvoke;
 
 public class UtilTester {
 //    @SneakyThrows
@@ -41,7 +42,7 @@ public class UtilTester {
     @SneakyThrows
     @Test
     public void excel() {
-        String excelFile = "D:\\数据处理\\免费义诊-预发数据-8月15.xlsx";
+        String excelFile = "D:\\数据处理\\免费义诊-预发数据-9月.xlsx";
         String sheet = "Sheet1";
         int maxRow = 100;
         AtomicInteger outIndex = new AtomicInteger();
@@ -82,17 +83,19 @@ public class UtilTester {
 
     @Test
     public void post() {
-        String excelFile = "D:\\数据处理\\免费义诊-预发数据-8月15.xlsx";
+        String excelFile = "D:\\数据处理\\免费义诊-预发数据-9月.xlsx";
         String fn = Files.getName(excelFile);
         HttpClient client = new HttpClient();
         for (File file : Files.listFiles(Files.getFullPath(excelFile), false)) {
             if (eq(file.getName(), fn)) {
                 continue;
             }
-            String ret = client.post("https://aicenterserver-stage.gaojihealth.cn/api/internal/aicenter/fileImport/heartDayActivity/importActivityDoctorData",
-                    Collections.emptyMap(),
-                    Collections.singletonMap("file", IOStream.wrap(file))).toString();
-            System.out.println(file + "\n" + ret + "\n");
+            sneakyInvoke(() -> {
+                String ret = client.post("https://aicenterserver-stage.gaojihealth.cn/api/internal/aicenter/fileImport/heartDayActivity/importActivityDoctorData",
+                        Collections.emptyMap(),
+                        Collections.singletonMap("file", IOStream.wrap(file))).toString();
+                System.out.println(file + "\n" + ret + "\n");
+            }, 3);
         }
     }
 }
