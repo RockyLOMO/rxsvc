@@ -9,7 +9,7 @@ import org.redisson.api.RSetCache;
 import org.redisson.api.RTopic;
 import org.rx.core.Constants;
 import org.rx.core.ResetEventWait;
-import org.rx.exception.ExceptionHandler;
+import org.rx.exception.TraceHandler;
 import org.rx.redis.RedisCache;
 import org.rx.util.function.TripleAction;
 import org.rx.util.function.TripleFunc;
@@ -99,7 +99,7 @@ public class BrowserAsyncTopic {
                     }
                     ((TripleAction<RemoteBrowser, String>) future.callback).invoke(browser, asyncResponse.getRequest().getUrl());
                 } catch (Throwable e) {
-                    ExceptionHandler.INSTANCE.log("Async {} error", future.asyncId, e);
+                    TraceHandler.INSTANCE.log("Async {} error", future.asyncId, e);
                     future.exception = e;
                 } finally {
                     callbacks.remove(future.asyncId);
