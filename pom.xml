@@ -50,7 +50,7 @@
         <gpg.skip>true</gpg.skip>
         <lombok.version>1.18.24</lombok.version>
         <rxlib.version>2.18.3-SNAPSHOT</rxlib.version>
-        <redisson.version>3.17.5</redisson.version>
+        <redisson.version>3.17.7</redisson.version>
 
         <javaxMail.version>1.6.2</javaxMail.version>
         <poi.version>5.2.2</poi.version>
