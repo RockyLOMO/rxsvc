@@ -39,10 +39,11 @@ public class UtilTester {
         Helper.sendEmail("hw", "asd", "rockywong.chn@qq.com");
     }
 
+    String excelFile = "D:\\数据处理\\免费义诊-预发数据-10月.xlsx";
+
     @SneakyThrows
     @Test
     public void excel() {
-        String excelFile = "D:\\数据处理\\免费义诊-预发数据-9月.xlsx";
         String sheet = "Sheet1";
         int maxRow = 100;
         AtomicInteger outIndex = new AtomicInteger();
@@ -83,7 +84,6 @@ public class UtilTester {
 
     @Test
     public void post() {
-        String excelFile = "D:\\数据处理\\免费义诊-预发数据-9月.xlsx";
         String fn = Files.getName(excelFile);
         HttpClient client = new HttpClient();
         for (File file : Files.listFiles(Files.getFullPath(excelFile), false)) {

@@ -95,7 +95,7 @@ public abstract class RemoteBrowser implements Browser {
     public static synchronized RemoteBrowser create(@NonNull BrowserType type) {
         MiddlewareConfig config = SpringContext.getBean(MiddlewareConfig.class);
         String endpoint = config.getCrawlerEndpoint();
-        BrowserPoolListener listener = FACADE.computeIfAbsent(endpoint, k -> Remoting.create(BrowserPoolListener.class, RpcClientConfig.statefulMode(endpoint, 0)));
+        BrowserPoolListener listener = FACADE.computeIfAbsent(endpoint, k -> Remoting.createFacade(BrowserPoolListener.class, RpcClientConfig.statefulMode(endpoint, 0)));
         int port = listener.nextIdleId(type);
         InetSocketAddress newEndpoint = Sockets.newEndpoint(endpoint, port);
         log.info("RBrowser connect {} -> {}[{}]", type, newEndpoint, endpoint);
@@ -103,9 +103,9 @@ public abstract class RemoteBrowser implements Browser {
     }
 
     static RemoteBrowser wrap(InetSocketAddress endpoint) {
-        RpcClientConfig clientConfig = RpcClientConfig.statefulMode(endpoint, 0);
-        clientConfig.setEnableReconnect(false);
-        Browser browser = Remoting.create(Browser.class, clientConfig);
+        RpcClientConfig<Browser> clientConfig = RpcClientConfig.statefulMode(endpoint, 0);
+        clientConfig.getTcpConfig().setEnableReconnect(false);
+        Browser browser = Remoting.createFacade(Browser.class, clientConfig);
         return proxy(RemoteBrowser.class, (m, p) -> {
             if (Reflects.isCloseMethod(m)) {
                 log.debug("RBrowser release {}", browser.getId());
