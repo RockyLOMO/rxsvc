@@ -43,7 +43,7 @@ public class UtilTester {
 
     @SneakyThrows
     @Test
-    public void excel() {
+    public void excelPrepare() {
         String sheet = "Sheet1";
         int maxRow = 100;
         AtomicInteger outIndex = new AtomicInteger();
@@ -83,7 +83,7 @@ public class UtilTester {
     }
 
     @Test
-    public void post() {
+    public void excelPost() {
         String fn = Files.getName(excelFile);
         HttpClient client = new HttpClient();
         for (File file : Files.listFiles(Files.getFullPath(excelFile), false)) {
