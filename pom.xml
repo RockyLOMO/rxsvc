@@ -51,6 +51,7 @@
         <lombok.version>1.18.24</lombok.version>
         <rxlib.version>2.18.8-SNAPSHOT</rxlib.version>
         <redisson.version>3.17.7</redisson.version>
+        <guava.version>31.1-jre</guava.version>
 
         <javaxMail.version>1.6.2</javaxMail.version>
         <poi.version>5.2.2</poi.version>
@@ -76,6 +77,11 @@
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
             <version>${redisson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
