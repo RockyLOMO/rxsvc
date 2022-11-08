@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-import static org.rx.core.App.*;
+import static org.rx.core.Sys.*;
 
 @RequiredArgsConstructor
 @Component

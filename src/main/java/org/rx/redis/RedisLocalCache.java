@@ -13,7 +13,7 @@
 //import java.io.Serializable;
 //import java.util.Set;
 //
-//import static org.rx.core.App.*;
+//import static org.rx.core.Sys.*;
 //
 //@Slf4j
 //public class RedisLocalCache<TK, TV> extends RedisCache<TK, TV> {
