@@ -2,11 +2,11 @@ package org.rx.crawler;
 
 import lombok.*;
 import org.rx.core.EventArgs;
-import org.rx.core.EventTarget;
+import org.rx.core.EventPublisher;
 
 import java.util.List;
 
-public interface FiddlerWatcher extends EventTarget<FiddlerWatcher> {
+public interface FiddlerWatcher extends EventPublisher<FiddlerWatcher> {
     @Getter
     @RequiredArgsConstructor
     class CallbackEventArgs extends EventArgs {
