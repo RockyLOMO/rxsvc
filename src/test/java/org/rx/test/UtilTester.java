@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.rx.core.Extends.eq;
-import static org.rx.core.Extends.sneakyInvoke;
+import static org.rx.core.Extends.quietly;
 
 public class UtilTester {
 //    @SneakyThrows
@@ -39,7 +39,7 @@ public class UtilTester {
         Helper.sendEmail("hw", "asd", "rockywong.chn@qq.com");
     }
 
-    String excelFile = "D:\\数据处理\\免费义诊-预发数据-10月.xlsx";
+    String excelFile = "D:\\数据处理\\免费义诊-预发数据-11月.xlsx";
 
     @SneakyThrows
     @Test
@@ -90,7 +90,7 @@ public class UtilTester {
             if (eq(file.getName(), fn)) {
                 continue;
             }
-            sneakyInvoke(() -> {
+            quietly(() -> {
                 String ret = client.post("https://aicenterserver-stage.gaojihealth.cn/api/internal/aicenter/fileImport/heartDayActivity/importActivityDoctorData",
                         Collections.emptyMap(),
                         Collections.singletonMap("file", IOStream.wrap(file))).toString();
