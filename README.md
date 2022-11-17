@@ -1,2 +1,2 @@
-# ℞lib-delta
-A set of middleware utilities for Java.
+# ℞svc
+A set of utilities for Java.
