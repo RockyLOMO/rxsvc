@@ -10,12 +10,12 @@
     </parent>
 
     <groupId>com.github.rockylomo</groupId>
-    <artifactId>rxlib-delta</artifactId>
+    <artifactId>rxsvc</artifactId>
     <version>1.0.2-SNAPSHOT</version>
     <!-- -SNAPSHOT -->
-    <name>rxlib-delta</name>
+    <name>rxsvc</name>
     <description>A set of utilities for Java</description>
-    <url>https://github.com/RockyLOMO/rxlib-delta</url>
+    <url>https://github.com/RockyLOMO/rxsvc</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -24,9 +24,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/RockyLOMO/rxlib-delta</url>
-        <connection>scm:git:https://github.com/RockyLOMO/rxlib-delta.git</connection>
-        <developerConnection>scm:git:https://github.com/RockyLOMO/rxlib-delta.git</developerConnection>
+        <url>https://github.com/RockyLOMO/rxsvc</url>
+        <connection>scm:git:https://github.com/RockyLOMO/rxsvc.git</connection>
+        <developerConnection>scm:git:https://github.com/RockyLOMO/rxsvc.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <organization>
