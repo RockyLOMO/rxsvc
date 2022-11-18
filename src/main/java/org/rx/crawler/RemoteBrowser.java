@@ -108,7 +108,7 @@ public abstract class RemoteBrowser implements Browser {
         Browser browser = Remoting.createFacade(Browser.class, clientConfig);
         return proxy(RemoteBrowser.class, (m, p) -> {
             if (Reflects.isCloseMethod(m)) {
-                log.debug("RBrowser release {}", browser.getId());
+                log.debug("RBrowser release {}", browser);
                 browser.close();
                 return null;
             }
@@ -143,7 +143,7 @@ public abstract class RemoteBrowser implements Browser {
     public <T> T waitScriptComplete(int timeoutSeconds, @NonNull String checkCompleteScript, String callbackScript) {
         executeScript(String.format("_rx.waitComplete(%s, function () { %s });", timeoutSeconds, checkCompleteScript));
 
-        int waitMillis = getWaitMillis();
+        long waitMillis = getWaitMillis();
         int count = 0, loopCount = Math.round(timeoutSeconds * 1000f / waitMillis);
         do {
             String isOk = executeScript("return _rx.ok;");

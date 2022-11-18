@@ -13,13 +13,11 @@ public interface Browser extends AutoCloseable {
         return IOStream.readString(Reflects.getResource(resourcePath), StandardCharsets.UTF_8);
     }
 
-    int getId();
-
     BrowserType getType();
 
     void setCookieRegion(String cookieRegion);
 
-    int getWaitMillis();
+    long getWaitMillis();
 
     String getCurrentUrl();
 
