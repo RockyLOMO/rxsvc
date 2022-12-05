@@ -4,6 +4,8 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.redisson.api.RTransferQueue;
 import org.redisson.codec.SerializationCodec;
+import org.rx.core.Linq;
+import org.rx.core.StringBuilder;
 import org.rx.io.Files;
 import org.rx.io.IOStream;
 import org.rx.net.http.HttpClient;
@@ -13,6 +15,7 @@ import org.rx.util.function.Action;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -96,6 +99,21 @@ public class UtilTester {
                         Collections.singletonMap("file", IOStream.wrap(file))).toString();
                 System.out.println(file + "\n" + ret + "\n");
             }, 3);
+        }
+    }
+
+    @SneakyThrows
+    @Test
+    public void lusu() {
+        String path = "D:\\监管-lusu-熙康字段映射.xlsx";
+        Map<String, List<Object[]>> sheets = Helper.readExcel(new FileInputStream(path), false, true, false);
+        StringBuilder buf = new StringBuilder();
+        for (Map.Entry<String, List<Object[]>> entry : sheets.entrySet()) {
+            String fn = "D:\\var\\" + entry.getKey() + ".log";
+            buf.setLength(0);
+            buf.appendLine("{%s}", Linq.from(entry.getValue()).where(p -> p.length > 0).toJoinString(",", p -> String.format("\"%s\":\"\"", p[0]))).appendLine();
+            buf.appendLine("{%s}", Linq.from(entry.getValue()).where(p -> p.length > 0).toJoinString(",", p -> String.format("\"%s\":\"\"", p[1]))).appendLine();
+            IOStream.writeString(new FileOutputStream(fn), buf.toString(), StandardCharsets.UTF_8);
         }
     }
 }
