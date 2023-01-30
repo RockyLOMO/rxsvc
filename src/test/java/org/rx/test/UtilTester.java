@@ -42,12 +42,12 @@ public class UtilTester {
         Helper.sendEmail("hw", "asd", "rockywong.chn@qq.com");
     }
 
-    String excelFile = "D:\\数据处理\\免费义诊-预发数据-11月.xlsx";
+    String excelFile = "D:\\数据处理\\免费义诊-预发数据-2023年-1月.xlsx";
 
     @SneakyThrows
     @Test
     public void excelPrepare() {
-        String sheet = "Sheet1";
+        String sheet = "Sheet2";
         int maxRow = 100;
         AtomicInteger outIndex = new AtomicInteger();
         Map<String, List<Object[]>> sheets = Helper.readExcel(new FileInputStream(excelFile), false);
@@ -111,8 +111,8 @@ public class UtilTester {
         for (Map.Entry<String, List<Object[]>> entry : sheets.entrySet()) {
             String fn = "D:\\var\\" + entry.getKey() + ".log";
             buf.setLength(0);
-            buf.appendLine("{%s}", Linq.from(entry.getValue()).where(p -> p.length > 0).toJoinString(",", p -> String.format("\"%s\":\"\"", p[0]))).appendLine();
-            buf.appendLine("{%s}", Linq.from(entry.getValue()).where(p -> p.length > 0).toJoinString(",", p -> String.format("\"%s\":\"\"", p[1]))).appendLine();
+            buf.appendLine("{\"gjRequestId\":\"\",\"_token\":\"\",%s}", Linq.from(entry.getValue()).where(p -> p.length > 0).toJoinString(",", p -> String.format("\"%s\":\"\"", p[0]))).appendLine();
+            buf.appendLine("{\"gjRequestId\":\"\",\"_token\":\"\",%s}", Linq.from(entry.getValue()).where(p -> p.length > 0).toJoinString(",", p -> String.format("\"%s\":\"\"", p[1]))).appendLine();
             IOStream.writeString(new FileOutputStream(fn), buf.toString(), StandardCharsets.UTF_8);
         }
     }
