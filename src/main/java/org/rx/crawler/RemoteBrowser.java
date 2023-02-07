@@ -156,11 +156,11 @@ public abstract class RemoteBrowser implements Browser {
         return executeScript(callbackScript);
     }
 
-    public void waitClickComplete(int timeoutSeconds, @NonNull Predicate<Integer> checkComplete, @NonNull String btnSelector, int reClickEachSeconds, boolean skipFirstClick) throws TimeoutException {
+    public boolean waitClickComplete(int timeoutSeconds, @NonNull Predicate<Integer> checkComplete, @NonNull String btnSelector, int reClickEachSeconds, boolean skipFirstClick) {
         require(timeoutSeconds, timeoutSeconds <= 60);
         require(reClickEachSeconds, reClickEachSeconds > 0);
 
-        createWait(timeoutSeconds).retryEvery(reClickEachSeconds * 1000L, s -> {
+        return createWait(timeoutSeconds).retryEvery(reClickEachSeconds * 1000L, s -> {
             try {
                 elementClick(btnSelector, true);
                 log.debug("waitClickComplete {} click ok", btnSelector);
