@@ -22,7 +22,7 @@ public interface Browser extends AutoCloseable {
     String getCurrentUrl();
 
     default FluentWait createWait(int timeoutSeconds) {
-        return FluentWait.newInstance(timeoutSeconds * 1000L, getWaitMillis());
+        return FluentWait.polling(timeoutSeconds * 1000L, getWaitMillis());
     }
 
     default void navigateBlank() {
