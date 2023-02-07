@@ -60,7 +60,9 @@ public class BrowserAsyncTopic {
 
         @Override
         public T get(long timeout, TimeUnit unit) throws ExecutionException, TimeoutException {
-            waiter.waitOne(TimeUnit.MILLISECONDS.convert(timeout, unit));
+            if (!waiter.waitOne(TimeUnit.MILLISECONDS.convert(timeout, unit))) {
+                throw new TimeoutException();
+            }
             if (exception != null) {
                 throw new ExecutionException(exception);
             }
