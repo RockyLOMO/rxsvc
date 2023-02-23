@@ -61,7 +61,6 @@ public class Helper {
         }
     }
 
-    @SneakyThrows
     public static Map<String, List<Object[]>> readExcel(InputStream in, boolean is2003File) {
         return readExcel(in, is2003File, false, false);
     }

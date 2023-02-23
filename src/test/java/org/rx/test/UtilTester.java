@@ -42,7 +42,7 @@ public class UtilTester {
         Helper.sendEmail("hw", "asd", "rockywong.chn@qq.com");
     }
 
-    String excelFile = "D:\\数据处理\\免费义诊-预发数据-2023年-1月.xlsx";
+    String excelFile = "D:\\数据处理\\免费义诊-预发数据-2023年-2月-日达仙活动.xlsx";
 
     @SneakyThrows
     @Test
