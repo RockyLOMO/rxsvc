@@ -48,8 +48,8 @@
         <java.version>1.8</java.version>
         <shallow>true</shallow>
         <gpg.skip>true</gpg.skip>
-        <lombok.version>1.18.24</lombok.version>
-        <rxlib.version>2.19.2-SNAPSHOT</rxlib.version>
+        <lombok.version>1.18.26</lombok.version>
+        <rxlib.version>2.19.3-SNAPSHOT</rxlib.version>
         <redisson.version>3.19.1</redisson.version>
         <guava.version>31.1-jre</guava.version>
 
