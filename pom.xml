@@ -49,8 +49,8 @@
         <shallow>true</shallow>
         <gpg.skip>true</gpg.skip>
         <lombok.version>1.18.26</lombok.version>
-        <rxlib.version>2.19.5-SNAPSHOT</rxlib.version>
-        <redisson.version>3.19.1</redisson.version>
+        <rxlib.version>2.19.7-SNAPSHOT</rxlib.version>
+        <redisson.version>3.21.3</redisson.version>
         <guava.version>31.1-jre</guava.version>
 
         <javaxMail.version>1.6.2</javaxMail.version>
