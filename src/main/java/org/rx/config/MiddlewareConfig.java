@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MiddlewareConfig {
     private String redisUrl;
+    private boolean redisLocalFallback;
     private String storeUrl;
     private int limiterPermits = 12;
     private String limiterWhiteList;

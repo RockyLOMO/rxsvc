@@ -58,7 +58,7 @@ public class RedisCache<TK, TV> implements Cache<TK, TV> {
 
     static final String BASE64_KEY_PREFIX = "B:";
     @Getter
-    private final RedissonClient client;
+    final RedissonClient client;
     @Getter
     @Setter
     int entrySetLimit = 100;
