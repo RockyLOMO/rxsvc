@@ -3,6 +3,7 @@ package org.rx.redis;
 import lombok.NonNull;
 import org.rx.core.Cache;
 import org.rx.core.CachePolicy;
+import org.rx.core.cache.MemoryCache;
 import org.rx.util.function.BiFunc;
 
 import java.util.Set;
@@ -24,7 +25,7 @@ public class RedisFallbackCache<TK, TV> extends RedisCache<TK, TV> {
     public RedisFallbackCache(String redisUrl, Cache<TK, TV> fallback) {
         super(redisUrl);
         if (fallback == null) {
-            fallback = Cache.getInstance(Cache.MEMORY_CACHE);
+            fallback = Cache.getInstance(MemoryCache.class);
         }
         this.fallback = fallback;
     }
