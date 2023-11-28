@@ -144,25 +144,24 @@ public class Helper {
         return data;
     }
 
-    public static void writeExcel(OutputStream out, boolean is2003File, Map<String, List<Object[]>> data) {
+    public static void writeExcel(OutputStream out, boolean is2003File, Map<String, Iterable<Object[]>> data) {
         writeExcel(out, is2003File, data, null);
     }
 
     @SneakyThrows
-    public static void writeExcel(OutputStream out, boolean is2003File, Map<String, List<Object[]>> data, Function<Row, Row> onRow) {
+    public static void writeExcel(OutputStream out, boolean is2003File, Map<String, Iterable<Object[]>> data, Function<Row, Row> onRow) {
         try (Workbook workbook = is2003File ? new HSSFWorkbook() : new XSSFWorkbook()) {
-            for (Map.Entry<String, List<Object[]>> entry : data.entrySet()) {
+            for (Map.Entry<String, Iterable<Object[]>> entry : data.entrySet()) {
                 Sheet sheet = workbook.getSheet(entry.getKey());
                 if (sheet == null) {
                     sheet = workbook.createSheet(entry.getKey());
                 }
-                List<Object[]> rows = entry.getValue();
-                for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+                int rowIndex = 0;
+                for (Object[] cells : entry.getValue()) {
                     Row row = sheet.getRow(rowIndex);
                     if (row == null) {
                         row = sheet.createRow(rowIndex);
                     }
-                    Object[] cells = rows.get(rowIndex);
                     for (int i = 0; i < cells.length; i++) {
                         Cell cell = row.getCell(i);
                         if (cell == null) {
@@ -186,6 +185,7 @@ public class Helper {
                         }
                         onRow.apply(row);
                     }
+                    rowIndex++;
                 }
             }
             workbook.write(out);
